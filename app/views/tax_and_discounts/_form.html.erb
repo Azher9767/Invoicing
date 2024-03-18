@@ -1,0 +1,47 @@
+<%= form_with(model: tax_and_discount) do |form| %>
+  <% if tax_and_discount.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(tax_and_discount.errors.count, "error") %> prohibited this tax_and_discount from being saved:</h2>
+
+      <ul>
+        <% tax_and_discount.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div>
+    <%= form.label :td_type, style: "display: block" %>
+    <%= form.text_field :td_type %>
+  </div>
+
+  <div>
+    <%= form.label :amount, style: "display: block" %>
+    <%= form.text_field :amount %>
+  </div>
+
+  <div>
+    <%= form.label :belongs_to, style: "display: block" %>
+    <%= form.text_field :belongs_to %>
+  </div>
+
+  <div>
+    <%= form.label :user, style: "display: block" %>
+    <%= form.text_field :user %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

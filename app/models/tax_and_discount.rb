@@ -1,0 +1,2 @@
+class TaxAndDiscount < ApplicationRecord
+end
