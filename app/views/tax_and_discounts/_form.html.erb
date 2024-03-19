@@ -11,37 +11,30 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
-  </div>
+  
+  <div class="container">
+    <div class="mb-2">
+      <%= form.label :name, style: "display: block" %>
+      <%= form.text_field :name %>
+    </div>
 
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.text_area :description %>
-  </div>
+    <div class="mb-2">
+      <%= form.label :description, style: "display: block" %>
+      <%= form.text_area :description %>
+    </div>
 
-  <div>
-    <%= form.label :td_type, style: "display: block" %>
-    <%= form.text_field :td_type %>
-  </div>
+    <div class="mb-2">
+      <%= form.label :td_type, style: "display: block" %>
+      <%= form.text_field :td_type %>
+    </div>
 
-  <div>
-    <%= form.label :amount, style: "display: block" %>
-    <%= form.text_field :amount %>
-  </div>
+    <div class="mb-2">
+      <%= form.label :amount, style: "display: block" %>
+      <%= form.text_field :amount %>
+    </div>
 
-  <div>
-    <%= form.label :belongs_to, style: "display: block" %>
-    <%= form.text_field :belongs_to %>
-  </div>
-
-  <div>
-    <%= form.label :user, style: "display: block" %>
-    <%= form.text_field :user %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+    <div>
+      <%= form.submit %>
+    </div>
   </div>
 <% end %>

@@ -3,10 +3,9 @@
 <h1>Categories</h1>
 
 <div id="categories">
-  <% @categories.each do |category| %>
-    <%= render category %>
+  <% @categories.each_with_index do |category, index| %>
     <p>
-      <%= link_to "Show this category", category %>
+      <%= link_to "#{index} #{ category.name } Show", category %>
     </p>
   <% end %>
 </div>

@@ -3,10 +3,10 @@
 <h1>Invoices</h1>
 
 <div id="invoices">
-  <% @invoices.each do |invoice| %>
-    <%= render invoice %>
+  <% @invoices.each_with_index do |invoice, index| %>
+    
     <p>
-      <%= link_to "Show this invoice", invoice %>
+      <%= link_to "#{index} #{invoice.name} Show", invoice %>
     </p>
   <% end %>
 </div>

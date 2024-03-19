@@ -16,10 +16,6 @@
     <%= form.text_field :name %>
   </div>
 
-  <div>
-  <%= form.label :user_id, style: "display: block" %>
-  <%= form.text_field :user_id %>
-  </div>
 
   <div>
     <%= form.label :description, style: "display: block" %>
@@ -29,17 +25,18 @@
   <div>
     <%= form.label :unit_rate, style: "display: block" %>
     <%= form.text_field :unit_rate %>
-  </div>
+  </div><br>
 
   <div>
-    <%= form.label :category_id, style: "display: block" %>
-    <%= form.number_field :category_id %>
-  </div>
+  <%= form.label :category_id %>
+  <%= select_tag :category_id, options_for_select(Category.all.map { |category| [category.name, category.id ] }), {prompt: "select category"} %>
+  </div><br>
 
   <div>
     <%= form.label :unit, style: "display: block" %>
     <%= form.text_field :unit %>
-  </div>
+  </div><br>
+
 
   <div>
     <%= form.submit %>

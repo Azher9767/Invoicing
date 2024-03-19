@@ -3,10 +3,9 @@
 <h1>Products</h1>
 
 <div id="products">
-  <% @products.each do |product| %>
-    <%= render product %>
+  <% @products.each_with_index do |product, index| %>
     <p>
-      <%= link_to "Show this product", product %>
+      <%= link_to "#{index}  #{product.name} show", product %>
     </p>
   <% end %>
 </div>

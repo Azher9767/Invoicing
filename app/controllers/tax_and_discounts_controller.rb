@@ -1,4 +1,5 @@
 class TaxAndDiscountsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_tax_and_discount, only: %i[ show edit update destroy ]
 
   # GET /tax_and_discounts or /tax_and_discounts.json
@@ -22,7 +23,8 @@ class TaxAndDiscountsController < ApplicationController
   # POST /tax_and_discounts or /tax_and_discounts.json
   def create
     @tax_and_discount = TaxAndDiscount.new(tax_and_discount_params)
-
+    @tax_and_discount.user_id = current_user.id
+  
     respond_to do |format|
       if @tax_and_discount.save
         format.html { redirect_to tax_and_discount_url(@tax_and_discount), notice: "Tax and discount was successfully created." }
