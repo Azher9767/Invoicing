@@ -1,4 +1,5 @@
 class InvoicesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_invoice, only: %i[ show edit update destroy ]
 
   # GET /invoices or /invoices.json
@@ -22,7 +23,7 @@ class InvoicesController < ApplicationController
   # POST /invoices or /invoices.json
   def create
     @invoice = Invoice.new(invoice_params)
-
+    @invoice.user = current_user
     respond_to do |format|
       if @invoice.save
         format.html { redirect_to invoice_url(@invoice), notice: "Invoice was successfully created." }
