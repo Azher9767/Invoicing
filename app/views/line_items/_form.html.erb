@@ -27,13 +27,13 @@
   </div>
 
   <div>
-    <%= form.label :receipt_id, style: "display: block" %>
-    <%= form.number_field :receipt_id %>
+    <%= form.label :product_id, style: "display: block" %>
+    <%= form.number_field :product_id %>
   </div>
 
   <div>
-    <%= form.label :product_id, style: "display: block" %>
-    <%= form.number_field :product_id %>
+  <%= form.label :invoice_id, style: "display: block" %>
+  <%= form.number_field :invoice_id %>
   </div>
 
   <div>
@@ -41,20 +41,7 @@
     <%= form.text_field :unit %>
   </div>
 
-  <div>
-    <%= form.label :vendor_currency, style: "display: block" %>
-    <%= form.text_field :vendor_currency %>
-  </div>
 
-  <div>
-    <%= form.label :vendor_amount, style: "display: block" %>
-    <%= form.text_field :vendor_amount %>
-  </div>
-
-  <div>
-    <%= form.label :meta, style: "display: block" %>
-    <%= form.text_field :meta %>
-  </div>
 
   <div>
     <%= form.submit %>
