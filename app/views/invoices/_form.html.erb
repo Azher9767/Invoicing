@@ -12,6 +12,16 @@
   <% end %>
 
   <div class="container">
+  <div class="container">
+  <div class="mb-2">
+  
+  <%= form.fields_for :line_items do |line_item| %>
+    <div class="field">
+      <%= line_item.label :product_id %>
+      <%= line_item.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, { prompt: 'Select Product' } %>
+    </div>
+  <% end %>
+  
     <div class="mb-2">
       <%= form.label :line_items_count, style: "display: block" %>
       <%= form.number_field :line_items_count %>

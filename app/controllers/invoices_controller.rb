@@ -14,6 +14,9 @@ class InvoicesController < ApplicationController
   # GET /invoices/new
   def new
     @invoice = Invoice.new
+    @categories = Category.all
+    #here  we are creating new associating object of line_item
+    @invoice.line_items.build 
   end
 
   # GET /invoices/1/edit
