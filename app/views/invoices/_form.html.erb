@@ -23,8 +23,8 @@
     </div>
 
     <div class="mb-2">
-      <%= form.label :status, style: "display: block" %>
-      <%= form.text_field :status %>
+      <%= form.label :status, class: 'mb-2' %>
+      <%= form.select :status, Invoice.statuses.keys.map{ |w| [w.humanize, w]}, { prompt: 'Select Status' }%>
     </div>
 
     <div class="mb-2">
