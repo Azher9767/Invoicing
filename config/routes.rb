@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resources :tax_and_discounts
+  resources :line_items
+  resources :products
+  resources :invoices
+  resources :categories
   devise_for :users
   # devise_for :admin_users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

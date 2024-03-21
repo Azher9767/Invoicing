@@ -1,0 +1,13 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Categories</h1>
+
+<div id="categories">
+  <% @categories.each_with_index do |category, index| %>
+    <p>
+      <%= link_to "#{index} #{ category.name } Show", category %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New category", new_category_path %>

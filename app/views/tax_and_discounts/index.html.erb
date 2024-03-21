@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Tax and discounts</h1>
+
+<div id="tax_and_discounts">
+  <% @tax_and_discounts.each_with_index do |tax_and_discount, index| %>
+  
+    <p>
+      <%= link_to "#{index} #{tax_and_discount.name} Show", tax_and_discount %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New tax and discount", new_tax_and_discount_path %>
