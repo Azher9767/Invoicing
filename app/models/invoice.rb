@@ -8,5 +8,7 @@ class Invoice < ApplicationRecord
 
   validates :status, presence: true, inclusion: { in: statuses.keys }
 
+  has_many :line_items
+
   accepts_nested_attributes_for :line_items
 end

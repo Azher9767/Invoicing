@@ -19,6 +19,15 @@ class InvoicesController < ApplicationController
     @invoice.line_items.build 
   end
 
+  def add_line_items
+    @product = Product.find(params[:product_id])
+    @line_item_fields = LineItem.new(item_name: @product.name, quantity: @product.unit, unit_rate: @product.unit_rate, product_id: @product.id)
+  
+    respond_to do |format|
+      format.turbo_stream 
+    end
+  end
+
   # GET /invoices/1/edit
   def edit
   end
@@ -69,6 +78,6 @@ class InvoicesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invoice_params
-      params.require(:invoice).permit(:line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date)
+      params.require(:invoice).permit(:product_id, :line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date, line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit])
     end
 end

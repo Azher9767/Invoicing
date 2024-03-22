@@ -12,15 +12,14 @@
   <% end %>
 
   <div class="container">
-  <div class="container">
-  <div class="mb-2">
-  
-  <%= form.fields_for :line_items do |line_item| %>
-    <div class="field">
-      <%= line_item.label :product_id %>
-      <%= line_item.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, { prompt: 'Select Product' } %>
+    <div class="container">
+   
+    <div data-controller="invoice">
+    <div class="mb-2">
+      <%= form.label :product_id %>
+      <%= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, { prompt: 'Select Product'}, data: { invoice_target: "product" } %>
     </div>
-  <% end %>
+  </div>
   
     <div class="mb-2">
       <%= form.label :line_items_count, style: "display: block" %>
