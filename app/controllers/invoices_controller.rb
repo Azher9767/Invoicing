@@ -21,11 +21,13 @@ class InvoicesController < ApplicationController
 
   def add_line_items
     @product = Product.find(params[:product_id])
-    @line_item_fields = LineItem.new(item_name: @product.name, quantity: @product.unit, unit_rate: @product.unit_rate, product_id: @product.id)
-    puts "*"*10
-    puts @invoice.inspect
-    @invoice.line_items << @line_item_fields
-    puts @invoice.line_items.length
+    @line_item_fields = LineItem.new(
+      item_name: @product.name,
+      quantity: 1,
+      unit_rate: @product.unit_rate,
+      product_id: @product.id,
+      invoice_id: @invoice.id
+    )
     
     respond_to do |format|
       format.turbo_stream 
@@ -76,7 +78,7 @@ class InvoicesController < ApplicationController
 
   private
     def initiate_invoice
-      @invoice ||= Invoice.new(user_id: current_user.id)
+      @invoice = Invoice.new(user: current_user, status: Invoice::DRAFT)
     end
 
     # Use callbacks to share common setup or constraints between actions.

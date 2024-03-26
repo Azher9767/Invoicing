@@ -42,7 +42,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_130805) do
     t.float "unit_rate"
     t.float "quantity"
     t.bigint "invoice_id", null: false
-    t.bigint "product_id", null: false
+    t.bigint "product_id"
     t.string "unit"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

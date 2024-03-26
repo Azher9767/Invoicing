@@ -2,4 +2,19 @@
   <div class="col" id=<%= dom_id(line_item_fields) %>>
     <%= form.label :item_name, class: 'form-label' %>
     <%= form.text_field :item_name, class: "form-control" %>
+
+    <%= form.label :quantity, class: 'form-label' %>
+    <%= form.text_field :quantity, class: "form-control" %>
+
+    <%= form.label :unit_rate, class: 'form-label' %>
+    <%= form.text_field :unit_rate, class: "form-control" %>
+
+    <%= form.label :unit, class: 'form-label' %>
+    <%= form.text_field :unit, class: "form-control" %>
+
+    <%= form.hidden_field :product_id %>
+  </div>  
 <% end %>
+
+<div id="line_item_fields">
+</div>
