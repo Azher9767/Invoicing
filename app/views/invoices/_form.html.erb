@@ -1,5 +1,5 @@
-<h1><%= invoice.object_id%></h1>
-<%= form_with(model: invoice) do |form| %>
+<h1><%= invoice.object_id %></h1>
+<%= form_with(model: invoice, id: "new_invoice_form") do |form| %>
   <% if invoice.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(invoice.errors.count, "error") %> prohibited this invoice from being saved:</h2>
@@ -11,57 +11,72 @@
       </ul>
     </div>
   <% end %>
+  <div data-controller="invoice">
+    <div class="mb-2">
+      <%= form.label :product_id %>
+      <%= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, {prompt: "select product", multiple: true}, data: {invoice_target: "product", action: "change-> invoice#handler"} %>
+    </div>
+  </div>
 
-  <div class="container">
-    <div class="container">
-   
-    <div data-controller="invoice">
-      <div class="mb-2">
-        <%= form.label :product_id %>
-        <%= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, {prompt: "select product", multiple: true}, data: {invoice_target: "product", action: "change-> invoice#handler"} %>
+  <div id="line_item_fields">
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :line_items_count, style: "display: block" %>
+    <%= form.number_field :line_items_count %>
+  </div>
+
+  <div class="container" style="background-color: #f5f5f5; padding: 20px;">
+    <div id="invoice_form" class="row row-cols-lg-auto g-3 align-items-center">
+      <div class="row mb-3">
+        <div class="col">
+          <%= form.label :line_items_count, style: "display: block" %>
+          <%= form.number_field :line_items_count %>
+        </div>
+
+        <div class="col">
+          <%= form.label :name, style: "display: block" %>
+          <%= form.text_field :name %>
+        </div>
+
+        <div class="col">
+          <%= form.label :status, class: 'mb-2' %>
+          <%= form.select :status, Invoice.statuses.keys.map{ |w| [w.humanize, w]}, { prompt: 'Select Status' } %>
+        </div>
+
+        <div class="col">
+          <%= form.label :product_id %>
+          <%= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, { prompt: "select product" }, data: { invoice_target: "product", action: "change-> invoice#handler" } %>
+        </div>
+        
+
+        <div id="line_item_fields">
+        </div>
+
+        <div class="col">
+          <%= form.label :sub_total, style: "display: block" %>
+          <%= form.text_field :sub_total %>
+        </div>
+
+        <div class="col">
+          <%= form.label :note, style: "display: block" %>
+          <%= form.text_area :note %>
+        </div>
+
+        <div class="col">
+          <%= form.label :payment_date, style: "display: block" %>
+          <%= form.datetime_field :payment_date %>
+        </div>
+
+        <div class="col">
+          <%= form.label :due_date, style: "display: block" %>
+          <%= form.date_field :due_date %>
+        </div>
+
+        <div>
+          <%= form.submit class: "btn btn-primary" %>
+        </div>
       </div>
-    </div>
-
-    <div id="line_item_fields">
-    </div>
-  
-    <div class="mb-2">
-      <%= form.label :line_items_count, style: "display: block" %>
-      <%= form.number_field :line_items_count %>
-    </div>
-
-    <div class="mb-2">
-      <%= form.label :name, style: "display: block" %>
-      <%= form.text_field :name %>
-    </div>
-
-    <div class="mb-2">
-      <%= form.label :status, class: 'mb-2' %>
-      <%= form.select :status, Invoice.statuses.keys.map{ |w| [w.humanize, w]}, { prompt: 'Select Status' }%>
-    </div>
-
-    <div class="mb-2">
-      <%= form.label :sub_total, style: "display: block" %>
-      <%= form.text_field :sub_total %>
-    </div>
-
-    <div class="mb-2">
-      <%= form.label :note, style: "display: block" %>
-      <%= form.text_area :note %>
-    </div>
-
-    <div class="mb-2">
-      <%= form.label :payment_date, style: "display: block" %>
-      <%= form.datetime_field :payment_date %>
-    </div>
-
-    <div class="mb-2">
-      <%= form.label :due_date, style: "display: block" %>
-      <%= form.date_field :due_date %>
-    </div>
-
-    <div>
-      <%= form.submit %>
     </div>
   </div>
 <% end %>

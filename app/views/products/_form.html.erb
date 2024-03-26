@@ -11,32 +11,36 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.text_area :description %>
-  </div>
-
-  <div>
-    <%= form.label :unit_rate, style: "display: block" %>
-    <%= form.text_field :unit_rate %>
-  </div><br>
-
-  <div>
-    <%= form.label :category_id %>
-    <%= form.select :category_id, options_for_select(current_user.categories.map { |category| [category.name, category.id ] }), {prompt: "select category"} %>
-  </div><br>
  
-  <div>
-    <%= form.label :unit, style: "display: block" %>
-    <%= form.text_field :unit %>
-  </div><br>
+  
+  <div class="row mb-3">
+    <div class="col">
+      <%= form.label :name, class: "form-label" %>
+      <%= form.text_field :name, class: "form-control" %>
+    </div>
 
-  <div>
-    <%= form.submit %>
+    <div class="col">
+      <%= form.label :description, class: "form-label" %>
+      <%= form.text_area :description, class: "form-control" %>
+    </div>
+
+    <div class="col">
+      <%= form.label :unit_rate, class: "form-label" %>
+      <%= form.text_field :unit_rate, class: "form-control" %>
+    </div>
+
+    <div class="col">
+      <%= form.label :category_id, class: "form-label" %>
+      <%= form.select :category_id, options_for_select(current_user.categories.map { |category| [category.name, category.id ] }), {prompt: "select category"}, class: "form-select" %>
+    </div>
+
+    <div class="col">
+      <%= form.label :unit, class: "form-label" %>
+      <%= form.text_field :unit, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="col">
+    <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
