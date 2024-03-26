@@ -5,12 +5,10 @@ export default class extends Controller {
   static targets = ["product"]
 
   handler() {
-    const productId = this.productTarget.value;
-console.log(productId)
-    if (productId) {
-      get(`/invoices/add_line_items?product_id=${productId}`, {
-        responseKind: "turbo-stream"
-      });
-    }
+    let productId = this.productTarget.value;
+    console.log(productId)
+    get(`/invoices/add_line_items?product_id=${productId}`, {
+      responseKind: "turbo-stream"
+    });
   }
 }

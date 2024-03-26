@@ -1,5 +1,6 @@
 class InvoicesController < ApplicationController
   before_action :authenticate_user!
+  before_action :initiate_invoice, only: %i[new add_line_items]
   before_action :set_invoice, only: %i[ show edit update destroy ]
 
   # GET /invoices or /invoices.json
@@ -13,8 +14,7 @@ class InvoicesController < ApplicationController
 
   # GET /invoices/new
   def new
-    @invoice = Invoice.new
-    @categories = Category.all
+    @categories = Category.includes(:products).where(user_id: current_user.id)
     #here  we are creating new associating object of line_item
     @invoice.line_items.build 
   end
@@ -22,7 +22,11 @@ class InvoicesController < ApplicationController
   def add_line_items
     @product = Product.find(params[:product_id])
     @line_item_fields = LineItem.new(item_name: @product.name, quantity: @product.unit, unit_rate: @product.unit_rate, product_id: @product.id)
-  
+    puts "*"*10
+    puts @invoice.inspect
+    @invoice.line_items << @line_item_fields
+    puts @invoice.line_items.length
+    
     respond_to do |format|
       format.turbo_stream 
     end
@@ -71,6 +75,10 @@ class InvoicesController < ApplicationController
   end
 
   private
+    def initiate_invoice
+      @invoice ||= Invoice.new(user_id: current_user.id)
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_invoice
       @invoice = Invoice.find(params[:id])
@@ -78,6 +86,6 @@ class InvoicesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invoice_params
-      params.require(:invoice).permit(:product_id, :line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date, line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit])
+      params.require(:invoice).permit(:line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date, line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id])
     end
 end

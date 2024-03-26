@@ -15,11 +15,14 @@
     <div class="container">
    
     <div data-controller="invoice">
-    <div class="mb-2">
-      <%= form.label :product_id %>
-      <%= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, { prompt: 'Select Product'}, data: { invoice_target: "product" } %>
+      <div class="mb-2">
+        <%= form.label :product_id %>
+        <%= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, {prompt: "select product"}, data: {invoice_target: "product", action: "change-> invoice#handler"} %>
+      </div>
     </div>
-  </div>
+
+    <div id="line_item_fields">
+    </div>
   
     <div class="mb-2">
       <%= form.label :line_items_count, style: "display: block" %>
