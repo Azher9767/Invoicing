@@ -1,8 +1,15 @@
 <h1>New invoice</h1>
 
-<%= render "form", invoice: @invoice %>
-
-<br>
+<div class="d-flex flex-column flex-xl-row">
+  <div class="flex-lg-row-fluid me-lg-10">
+    <%= render "form", invoice: @invoice %>
+  </div>
+  <div class="flex-column flex-lg-row-auto w-150 w-xl-200px mb-10">
+    <div id="subtotal">
+      <p>Subtotal: <%= number_to_currency(0.0) %></p>
+    </div>
+  </div>
+</div>
 
 <div>
   <%= link_to "Back to invoices", invoices_path %>

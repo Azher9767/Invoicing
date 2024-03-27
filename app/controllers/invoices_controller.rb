@@ -1,5 +1,6 @@
 class InvoicesController < ApplicationController
   before_action :authenticate_user!
+  before_action :initiate_invoice, only: %i[new add_line_items]
   before_action :set_invoice, only: %i[ show edit update destroy ]
 
   # GET /invoices or /invoices.json
@@ -13,7 +14,38 @@ class InvoicesController < ApplicationController
 
   # GET /invoices/new
   def new
-    @invoice = Invoice.new
+    @categories = Category.includes(:products).where(user_id: current_user.id)
+    #here  we are creating new associating object of line_item
+    @invoice.line_items.build 
+  end
+
+  def add_line_items
+    @product = Product.find(params[:product_id])
+    @line_item_fields = LineItem.new(
+      item_name: @product.name,
+      quantity: 1,
+      unit_rate: @product.unit_rate,
+      product_id: @product.id,
+      invoice_id: @invoice.id
+    )
+    
+    respond_to do |format|
+      format.turbo_stream 
+    end
+  end
+
+  # this action is used at three scenarios
+  # 1. when user adds/removes a line item
+  # 2. when user updates the quantity of line item
+  # 3. when user updates the unit rate of line item
+  def calculate_sub_total
+    line_items = params[:lineItemsAttributes].map do |line_item|
+      LineItem.new(
+        quantity: line_item[:quantity].to_f,
+        unit_rate: line_item[:unitRate].to_f
+      )
+    end
+    @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items)
   end
 
   # GET /invoices/1/edit
@@ -24,6 +56,8 @@ class InvoicesController < ApplicationController
   def create
     @invoice = Invoice.new(invoice_params)
     @invoice.user = current_user
+    @invoice.sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(@invoice.line_items)
+    # InvoiceAmountCalculator.new(@invoice).calculate
     respond_to do |format|
       if @invoice.save
         format.html { redirect_to invoice_url(@invoice), notice: "Invoice was successfully created." }
@@ -37,6 +71,7 @@ class InvoicesController < ApplicationController
 
   # PATCH/PUT /invoices/1 or /invoices/1.json
   def update
+    # InvoiceAmountCalculator.new(@invoice).calculate
     respond_to do |format|
       if @invoice.update(invoice_params)
         format.html { redirect_to invoice_url(@invoice), notice: "Invoice was successfully updated." }
@@ -59,6 +94,10 @@ class InvoicesController < ApplicationController
   end
 
   private
+    def initiate_invoice
+      @invoice = Invoice.new(user: current_user, status: Invoice::DRAFT)
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_invoice
       @invoice = Invoice.find(params[:id])
@@ -66,6 +105,6 @@ class InvoicesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invoice_params
-      params.require(:invoice).permit(:line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date)
+      params.require(:invoice).permit(:line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date, line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id])
     end
 end

@@ -42,7 +42,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_130805) do
     t.float "unit_rate"
     t.float "quantity"
     t.bigint "invoice_id", null: false
-    t.bigint "product_id", null: false
+    t.bigint "product_id"
     t.string "unit"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -51,7 +51,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_130805) do
   end
 
   create_table "products", force: :cascade do |t|
-    t.bigint "user_id", null: false
     t.bigint "category_id", null: false
     t.string "name"
     t.text "description"
@@ -60,7 +59,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_130805) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_products_on_category_id"
-    t.index ["user_id"], name: "index_products_on_user_id"
   end
 
   create_table "tax_and_discounts", force: :cascade do |t|
@@ -91,6 +89,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_130805) do
   add_foreign_key "line_items", "invoices"
   add_foreign_key "line_items", "products"
   add_foreign_key "products", "categories"
-  add_foreign_key "products", "users"
   add_foreign_key "tax_and_discounts", "users"
 end
