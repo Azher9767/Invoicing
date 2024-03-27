@@ -1,16 +1,24 @@
 <%= fields_for "invoice[line_items_attributes][#{line_item_fields.persisted? ? line_item_fields.id : line_item_fields.object_id}]", line_item_fields do |form|%>
-  <div class="col" id=<%= dom_id(line_item_fields) %>>
-    <%= form.label :item_name, class: 'form-label' %>
-    <%= form.text_field :item_name, class: "form-control" %>
+  <div class="row" id=<%= dom_id(line_item_fields) %>>
+    <div class="col-md-3">
+      <%= form.label :item_name, class: 'form-label' %>
+      <%= form.text_field :item_name, class: "form-control" %>
+    </div>  
 
-    <%= form.label :quantity, class: 'form-label' %>
-    <%= form.text_field :quantity, class: "form-control" %>
+    <div class="col-md-3">
+      <%= form.label :quantity, class: 'form-label' %>
+      <%= form.text_field :quantity, class: "form-control" %>
+    </div>  
 
-    <%= form.label :unit_rate, class: 'form-label' %>
-    <%= form.text_field :unit_rate, class: "form-control" %>
+    <div class="col-md-3">
+      <%= form.label :unit_rate, class: 'form-label' %>
+      <%= form.text_field :unit_rate, class: "form-control" %>
+    </div>
 
-    <%= form.label :unit, class: 'form-label' %>
-    <%= form.text_field :unit, class: "form-control" %>
+    <div class="col-md-3">
+      <%= form.label :unit, class: 'form-label' %>
+      <%= form.text_field :unit, class: "form-control" %>
+    </div>
 
     <%= form.hidden_field :product_id %>
   </div>  
