@@ -1,5 +1,5 @@
 <%= fields_for "invoice[line_items_attributes][#{line_item_fields.persisted? ? line_item_fields.id : line_item_fields.object_id}]", line_item_fields do |form|%>
-  <div class="row" id=<%= dom_id(line_item_fields) %>>
+  <div class="row" data-invoice-target="lineitem">
     <div class="col-md-3">
       <%= form.label :item_name, class: 'form-label' %>
       <%= form.text_field :item_name, class: "form-control" %>
@@ -7,12 +7,12 @@
 
     <div class="col-md-3">
       <%= form.label :quantity, class: 'form-label' %>
-      <%= form.text_field :quantity, class: "form-control" %>
+      <%= form.number_field :quantity, class: "form-control" %>
     </div>  
 
     <div class="col-md-3">
       <%= form.label :unit_rate, class: 'form-label' %>
-      <%= form.text_field :unit_rate, class: "form-control" %>
+      <%= form.number_field :unit_rate, class: "form-control" %>
     </div>
 
     <div class="col-md-3">
@@ -21,7 +21,7 @@
     </div>
 
     <%= form.hidden_field :product_id %>
-  </div>  
+  </div>
 <% end %>
 
 <div id="line_item_fields">

@@ -34,6 +34,20 @@ class InvoicesController < ApplicationController
     end
   end
 
+  # this action is used at three scenarios
+  # 1. when user adds/removes a line item
+  # 2. when user updates the quantity of line item
+  # 3. when user updates the unit rate of line item
+  def calculate_sub_total
+    line_items = params[:lineItemsAttributes].map do |line_item|
+      LineItem.new(
+        quantity: line_item[:quantity].to_f,
+        unit_rate: line_item[:unitRate].to_f
+      )
+    end
+    @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items)
+  end
+
   # GET /invoices/1/edit
   def edit
   end
@@ -42,6 +56,8 @@ class InvoicesController < ApplicationController
   def create
     @invoice = Invoice.new(invoice_params)
     @invoice.user = current_user
+    @invoice.sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(@invoice.line_items)
+    # InvoiceAmountCalculator.new(@invoice).calculate
     respond_to do |format|
       if @invoice.save
         format.html { redirect_to invoice_url(@invoice), notice: "Invoice was successfully created." }
@@ -55,6 +71,7 @@ class InvoicesController < ApplicationController
 
   # PATCH/PUT /invoices/1 or /invoices/1.json
   def update
+    # InvoiceAmountCalculator.new(@invoice).calculate
     respond_to do |format|
       if @invoice.update(invoice_params)
         format.html { redirect_to invoice_url(@invoice), notice: "Invoice was successfully updated." }

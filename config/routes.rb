@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :invoices do
     collection do
       get 'add_line_items'
+      post 'calculate_sub_total'
     end
   end
   # devise_for :admin_users

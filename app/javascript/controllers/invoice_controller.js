@@ -1,14 +1,35 @@
 import { Controller } from "@hotwired/stimulus"
-import { get } from "@rails/request.js"
+import { get, post } from "@rails/request.js"
 
 export default class extends Controller {
-  static targets = ["product"]
+  static targets = ["product", "lineitem"]
 
   handler() {
     let productId = this.productTarget.value;
-    console.log(productId)
     get(`/invoices/add_line_items?product_id=${productId}`, {
       responseKind: "turbo-stream"
     });
+  }
+
+  lineitemTargetConnected() {
+    this.handleLineItemChange()
+  }
+
+  lineitemTargetDisconnected() {
+    this.handleLineItemChange()    
+  }
+
+  handleLineItemChange(event) {
+    let lineItemsAttributes = [];
+    this.lineitemTargets.forEach((lineitem) => {
+      lineItemsAttributes.push({
+        quantity: lineitem.children[1].children[1].value,
+        unitRate: lineitem.children[2].children[1].value
+      })
+    })
+    post(`/invoices/calculate_sub_total`, {
+      body: JSON.stringify({ lineItemsAttributes }),
+      responseKind: "turbo-stream"
+    })
   }
 }

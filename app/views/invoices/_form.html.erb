@@ -1,4 +1,3 @@
-<h1><%= invoice.object_id %></h1>
 <div class="p-5 mb-4 bg-body-tertiary rounded-3">
   <%= form_with(model: invoice, id: "new_invoice_form", class: 'row g-3') do |form| %>
     <% if invoice.errors.any? %>
@@ -33,9 +32,9 @@
       <div data-controller="invoice">
         <%= form.label :product_id, 'Line Items', class: 'form-label' %>
         <%= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, {prompt: "select product", multiple: true}, {class: 'form-select', data: {invoice_target: "product", action: "change-> invoice#handler"}} %>
-      </div>
 
-      <div id="line_item_fields">
+        <div id="line_item_fields">
+        </div>
       </div>
     </div>
 
