@@ -1,64 +1,36 @@
-<% current_time = Time.now %>
-<% line_it = [] %>
-<% line_it << line_item_fields %>
+<% time = Time.now.to_i %>
 <%= fields_for "invoice[line_items_attributes][#{line_item_fields.persisted? ? line_item_fields.id : line_item_fields.object_id}]", line_item_fields do |form|%>
-  <%= puts current_time%>
-  
-  <% if line_it.count == 1 %>
 
-    <div class="row" data-invoice-target="lineitem">
-        <div class="col-md-3">
-          <%= form.label :item_name, class: 'form-label' %>
-          <%= form.text_field :item_name, class: "form-control" %>
-        </div>  
+  <div class="row" data-invoice-target="lineitem" id="<%= dom_id(line_item_fields) %>_<%= time %>">
+    <div class="col-md-3">
+      <%= form.text_field :item_name, class: "form-control" %>
+    </div>  
 
-        <div class="col-md-3">
-          <%= form.label :quantity, class: 'form-label' %>
-          <%= form.number_field :quantity, class: "form-control" %>
-        </div>  
+    <div class="col-md-3">
+      <%= form.number_field :quantity, class: "form-control" %>
+    </div>  
 
-        <div class="col-md-3">
-          <%= form.label :unit_rate, class: 'form-label' %>
-          <%= form.number_field :unit_rate, class: "form-control" %>
-        </div>
-
-        <div class="col-md-3">
-          <%= form.label :unit, class: 'form-label' %>
-          <%= form.text_field :unit, class: "form-control" %>
-        </div>
-
-        </div>
-          <%= form.hidden_field :product_id %>
-        </div>
+    <div class="col-md-3">
+      <%= form.number_field :unit_rate, class: "form-control" %>
     </div>
 
-  <% else %>
-    <div class="row" data-invoice-target="lineitem">
-        <div class="col-md-3">
-          
-          <%= form.text_field :item_name, class: "form-control" %>
-        </div>  
-
-        <div class="col-md-3">
-          
-          <%= form.number_field :quantity, class: "form-control" %>
-        </div>  
-
-        <div class="col-md-3">
-          
-          <%= form.number_field :unit_rate, class: "form-control" %>
-        </div>
-
-        <div class="col-md-3">
-         
-          <%= form.text_field :unit, class: "form-control" %>
-        </div>
-
-        </div>
-          <%= form.hidden_field :product_id %>
-        </div>
+    <div class="col-md-3">
+      <%= form.text_field :unit, class: "form-control" %>
     </div>
-  <% end %>
+
+    <div>
+      <%= form.hidden_field :product_id %>
+    </div>
+
+    <div class="col-md-2">
+      <% if line_item_fields.persisted? %>
+        <%= link_to "Delete", delete_line_items_invoices_path(line_item_fields, object: false, identifier: time), data: {turbo_method: :delete}, class: "btn btn-sm btn-danger mb-3" %>
+      <% else %>
+        <%= link_to "Delete", delete_line_items_invoices_path(line_item_id: line_item_fields.hash, object: true, identifier: time), data: {turbo_method: :delete}, class: "btn btn-sm btn-danger mb-3" %>
+      <% end %>
+    </div>
+    
+  </div>
 <% end %>
 
 <div id="line_item_fields">

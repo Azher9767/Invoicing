@@ -48,6 +48,21 @@ class InvoicesController < ApplicationController
     @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items)
   end
 
+  def delete_line_items
+    @identifier = params[:identifier]
+    if params[:object] == 'false'
+      @line_items = LineItem.find(params[:id])
+      @line_items.destroy
+    elsif params[:object] == 'true'
+      @line_items = LineItem.new
+    end
+    # line_item = LineItem.find(@line_item_id)
+
+    respond_to do |format|
+      format.turbo_stream 
+    end
+  end
+
   # GET /invoices/1/edit
   def edit
   end

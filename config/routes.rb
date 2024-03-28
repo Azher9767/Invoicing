@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     collection do
       get 'add_line_items'
       post 'calculate_sub_total'
+      delete 'delete_line_items'
     end
   end
   # devise_for :admin_users
