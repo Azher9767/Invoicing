@@ -1,37 +1,30 @@
-<% time = Time.now.to_i %>
-<%= fields_for "invoice[line_items_attributes][#{line_item_fields.persisted? ? line_item_fields.id : line_item_fields.object_id}]", line_item_fields do |form|%>
+<%= fields_for "invoice[line_items_attributes][#{line_item.persisted? ? line_item.id : line_item.object_id}]", line_item do |form|%>
 
-  <div class="row" data-invoice-target="lineitem" id="<%= dom_id(line_item_fields) %>_<%= time %>">
-    <div class="col-md-3">
+  <div class="row" data-invoice-target="lineitem" id="<%= dom_id(line_item) %>">
+    <div class="col-md-8">
       <%= form.text_field :item_name, class: "form-control" %>
     </div>  
 
-    <div class="col-md-3">
+    <div class="col-md-1">
       <%= form.number_field :quantity, class: "form-control" %>
     </div>  
 
-    <div class="col-md-3">
+    <div class="col-md-1">
       <%= form.number_field :unit_rate, class: "form-control" %>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-1">
       <%= form.text_field :unit, class: "form-control" %>
     </div>
 
-    <div>
-      <%= form.hidden_field :product_id %>
-    </div>
+    <%= form.hidden_field :product_id %>
+    <%= form.hidden_field :id %>
 
-    <div class="col-md-2">
-      <% if line_item_fields.persisted? %>
-        <%= link_to "Delete", delete_line_items_invoices_path(line_item_fields, object: false, identifier: time), data: {turbo_method: :delete}, class: "btn btn-sm btn-danger mb-3" %>
-      <% else %>
-        <%= link_to "Delete", delete_line_items_invoices_path(line_item_id: line_item_fields.hash, object: true, identifier: time), data: {turbo_method: :delete}, class: "btn btn-sm btn-danger mb-3" %>
-      <% end %>
+    <div class="col-md-1 text-end">
+      <%= link_to "Delete", delete_line_items_invoices_path(line_item_id: line_item.persisted? ? line_item.id : line_item.hash), data: {turbo_method: :delete}, class: "btn btn-sm btn-danger" %>
     </div>
-    
   </div>
 <% end %>
 
-<div id="line_item_fields">
+<div id="line_item">
 </div>

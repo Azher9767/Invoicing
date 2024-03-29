@@ -1,5 +1,6 @@
 class InvoicesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_category, only: %i[new edit]
   before_action :initiate_invoice, only: %i[new add_line_items]
   before_action :set_invoice, only: %i[ show edit update destroy ]
 
@@ -14,14 +15,11 @@ class InvoicesController < ApplicationController
 
   # GET /invoices/new
   def new
-    @categories = Category.includes(:products).where(user_id: current_user.id)
-    #here  we are creating new associating object of line_item
-    @invoice.line_items.build 
   end
 
   def add_line_items
     @product = Product.find(params[:product_id])
-    @line_item_fields = LineItem.new(
+    @line_item = LineItem.new(
       item_name: @product.name,
       quantity: 1,
       unit_rate: @product.unit_rate,
@@ -49,17 +47,11 @@ class InvoicesController < ApplicationController
   end
 
   def delete_line_items
-    @identifier = params[:identifier]
-    if params[:object] == 'false'
-      @line_items = LineItem.find(params[:id])
-      @line_items.destroy
-    elsif params[:object] == 'true'
-      @line_items = LineItem.new
-    end
-    # line_item = LineItem.find(@line_item_id)
-
-    respond_to do |format|
-      format.turbo_stream 
+    @line_item = LineItem.find_by(id: params[:line_item_id])
+    if @line_item.present?
+      @line_item.destroy
+    else
+      @line_item = LineItem.new
     end
   end
 
@@ -116,6 +108,10 @@ class InvoicesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_invoice
       @invoice = Invoice.find(params[:id])
+    end
+
+    def set_category
+      @categories = Category.includes(:products).where(user_id: current_user.id)
     end
 
     # Only allow a list of trusted parameters through.

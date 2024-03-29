@@ -1,6 +1,15 @@
 <h1>Editing invoice</h1>
 
-<%= render "form", invoice: @invoice %>
+<div class="d-flex flex-column flex-xl-row">
+  <div class="flex-lg-row-fluid me-lg-10">
+    <%= render "form", invoice: @invoice %>
+  </div>
+  <div class="flex-column flex-lg-row-auto w-150 w-xl-200px mb-10">
+    <div id="subtotal">
+      <p>Subtotal: <%= number_to_currency(@invoice.sub_total) %></p>
+    </div>
+  </div>
+</div>
 
 <br>
 

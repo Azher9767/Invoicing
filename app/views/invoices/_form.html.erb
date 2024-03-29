@@ -35,28 +35,32 @@
         <%= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, {prompt: "select product", multiple: true}, {class: 'form-select', data: {invoice_target: "product", action: "change-> invoice#handler"}} %>
         
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-8">
             <%= form.label :item_name, class: 'form-label' %>
           </div>  
 
-          <div class="col-md-3">
+          <div class="col-md-1">
             <%= form.label :quantity, class: 'form-label' %>
           </div>  
 
-          <div class="col-md-3">
+          <div class="col-md-1">
             <%= form.label :unit_rate, class: 'form-label' %>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-1">
             <%= form.label :unit, class: 'form-label' %>
           </div>
         </div>
 
-        <div id="line_item_fields">
+        <div id="line_item">
         </div>
       </div>
     </div>
-
+     
+    <% invoice.line_items.each do |line_item| %>
+      <%= render partial: 'line_item_fields', locals: { line_item: line_item } %>
+    <% end %>
+    
     <div class="col-12">
       <%= form.label :note, class: "form-label" %>
       <%= form.text_area :note, class: 'form-control' %>

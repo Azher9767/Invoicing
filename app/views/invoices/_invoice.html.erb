@@ -39,4 +39,15 @@
     <%= invoice.due_date %>
   </p>
 
+  <p>
+    <strong>Line Item:</strong>
+    <ol>
+      <% invoice.line_items.each do |line_item| %>
+        <li>
+          <%= line_item.item_name %> | <%= line_item.quantity %> | <%= line_item.unit_rate %>
+        </li>
+      <% end %>
+    </ol>
+  </p>
+
 </div>
