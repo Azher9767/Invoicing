@@ -11,6 +11,11 @@ export default class extends Controller {
     });
   }
 
+  handleInputChange(event) {
+    console.log("input");
+    this.handleLineItemChange();
+  }
+
   lineitemTargetConnected() {
     this.handleLineItemChange()
   }

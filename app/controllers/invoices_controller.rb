@@ -26,10 +26,7 @@ class InvoicesController < ApplicationController
       product_id: @product.id,
       invoice_id: @invoice.id
     )
-    
-    respond_to do |format|
-      format.turbo_stream 
-    end
+   
   end
 
   # this action is used at three scenarios
@@ -44,6 +41,7 @@ class InvoicesController < ApplicationController
       )
     end
     @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items)
+
   end
 
   def delete_line_items

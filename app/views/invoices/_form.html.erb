@@ -54,12 +54,12 @@
 
         <div id="line_item">
         </div>
+
+        <% invoice.line_items.each do |line_item| %>
+          <%= render partial: 'line_item_fields', locals: { line_item: line_item } %>
+        <% end %>
       </div>
     </div>
-     
-    <% invoice.line_items.each do |line_item| %>
-      <%= render partial: 'line_item_fields', locals: { line_item: line_item } %>
-    <% end %>
     
     <div class="col-12">
       <%= form.label :note, class: "form-label" %>
