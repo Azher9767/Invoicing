@@ -11,6 +11,10 @@ export default class extends Controller {
     });
   }
 
+  handleInputChange(event) {
+    this.handleLineItemChange();
+  }
+
   lineitemTargetConnected() {
     this.handleLineItemChange()
   }
@@ -23,8 +27,8 @@ export default class extends Controller {
     let lineItemsAttributes = [];
     this.lineitemTargets.forEach((lineitem) => {
       lineItemsAttributes.push({
-        quantity: lineitem.children[1].children[1].value,
-        unitRate: lineitem.children[2].children[1].value
+        quantity: lineitem.children[1].children[0].value,
+        unitRate: lineitem.children[2].children[0].value
       })
     })
     post(`/invoices/calculate_sub_total`, {

@@ -11,6 +11,7 @@
         </ul>
       </div>
     <% end %>
+    
     <div class="col-md-3">
       <%= form.label :name, class: "form-label" %>
       <%= form.text_field :name, class: 'form-control' %>
@@ -32,12 +33,34 @@
       <div data-controller="invoice">
         <%= form.label :product_id, 'Line Items', class: 'form-label' %>
         <%= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, {prompt: "select product", multiple: true}, {class: 'form-select', data: {invoice_target: "product", action: "change-> invoice#handler"}} %>
+        
+        <div class="row">
+          <div class="col-md-8">
+            <%= form.label :item_name, class: 'form-label' %>
+          </div>  
 
-        <div id="line_item_fields">
+          <div class="col-md-1">
+            <%= form.label :quantity, class: 'form-label' %>
+          </div>  
+
+          <div class="col-md-1">
+            <%= form.label :unit_rate, class: 'form-label' %>
+          </div>
+
+          <div class="col-md-1">
+            <%= form.label :unit, class: 'form-label' %>
+          </div>
         </div>
+
+        <div id="line_item">
+        </div>
+
+        <% invoice.line_items.each do |line_item| %>
+          <%= render partial: 'line_item_fields', locals: { line_item: line_item } %>
+        <% end %>
       </div>
     </div>
-
+    
     <div class="col-12">
       <%= form.label :note, class: "form-label" %>
       <%= form.text_area :note, class: 'form-control' %>
