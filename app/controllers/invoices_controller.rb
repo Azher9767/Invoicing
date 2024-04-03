@@ -45,8 +45,8 @@ class InvoicesController < ApplicationController
   end
 
   def delete_line_items
-    @line_item = LineItem.find_or_initialize_by(id: params[:line_item_id])
-    @line_item.destroy if @line_item.persisted?
+    @line_item = LineItem.find_by(id: params[:line_item_id])
+    @line_item.destroy if @line_item.present? && @line_item.persisted? 
   end
 
   # GET /invoices/1/edit

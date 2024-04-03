@@ -1,1 +1,5 @@
-<%= turbo_stream.remove "#{dom_id(@line_item)}" %>
+<% if @line_item.present? %>
+  <%= turbo_stream.remove "#{dom_id(@line_item)}" %>
+<% else %>
+  <%= turbo_stream.remove params[:line_item_id] %>
+<% end %>
