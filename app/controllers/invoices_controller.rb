@@ -45,14 +45,8 @@ class InvoicesController < ApplicationController
   end
 
   def delete_line_items
-    # @line_item = LineItem.find_or_initialize_by(id: params[:line_item_id])
-    # @line_item.destroy if @line_item.persisted?
-    @line_item = LineItem.find_by(id: params[:line_item_id])
-    if @line_item.present?
-      @line_item.destroy
-    else
-      @line_item = LineItem.new
-    end
+    @line_item = LineItem.find_or_initialize_by(id: params[:line_item_id])
+    @line_item.destroy if @line_item.persisted?
   end
 
   # GET /invoices/1/edit
@@ -64,7 +58,6 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.new(invoice_params)
     @invoice.user = current_user
     @invoice.sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(@invoice.line_items)
-    # InvoiceAmountCalculator.new(@invoice).calculate
     respond_to do |format|
       if @invoice.save
         format.html { redirect_to invoice_url(@invoice), notice: "Invoice was successfully created." }
@@ -78,7 +71,6 @@ class InvoicesController < ApplicationController
 
   # PATCH/PUT /invoices/1 or /invoices/1.json
   def update
-    # InvoiceAmountCalculator.new(@invoice).calculate
     respond_to do |format|
       if @invoice.update(invoice_params)
         format.html { redirect_to invoice_url(@invoice), notice: "Invoice was successfully updated." }
@@ -93,7 +85,6 @@ class InvoicesController < ApplicationController
   # DELETE /invoices/1 or /invoices/1.json
   def destroy
     @invoice.destroy!
-
     respond_to do |format|
       format.html { redirect_to invoices_url, notice: "Invoice was successfully destroyed." }
       format.json { head :no_content }
