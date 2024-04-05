@@ -13,7 +13,8 @@
     "nodemon": "^3.1.0",
     "postcss": "^8.4.36",
     "postcss-cli": "^11.0.0",
-    "sass": "^1.72.0"
+    "sass": "^1.72.0",
+    "tom-select": "^2.3.1"
   },
   "scripts": {
     "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",

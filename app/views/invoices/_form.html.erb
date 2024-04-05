@@ -32,7 +32,13 @@
     <div class="col-12">
       <div data-controller="invoice">
         <%= form.label :product_id, 'Line Items', class: 'form-label' %>
-        <%= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, {prompt: "select product", multiple: true}, {class: 'form-select', data: {invoice_target: "product", action: "change-> invoice#handler"}} %>
+        <%= select_tag :product_id, grouped_options_for_select(categories),
+          class: 'form-select',
+          prompt: 'Select Line Item',
+          multiple: true,
+          data: {invoice_target: 'product'},
+          id: 'product_id' %>
+        <%#= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, {prompt: "select product", multiple: true}, {class: 'form-select', data: {invoice_target: "product", action: "change-> invoice#handler"}} %>
         
         <div class="row">
           <div class="col-md-8">
