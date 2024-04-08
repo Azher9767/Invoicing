@@ -25,14 +25,6 @@ export default class extends Controller {
         }
       }
     });
-
-    // this.select.on('item_remove', (event) => {
-    //   // console.log(this.element.children[4].id)
-    //   let lineItemId = this.element.children[4].id;
-    //   let elementToRemove = document.getElementById(lineItemId);
-    //   console.log(elementToRemove)
-    //     elementToRemove.remove();
-    // });
   }
 
   addHandler(id) {
@@ -43,7 +35,6 @@ export default class extends Controller {
   }
 
   removeHandler(id) {
-    console.log(id)
     destroy(`/invoices/delete_line_items?line_item_id=${this.element.children[4].id}`, { 
       responseKind: "turbo-stream"
     });
@@ -58,8 +49,7 @@ export default class extends Controller {
   }
 
   lineitemTargetDisconnected(event) {
-    this.handleLineItemChange() 
-    // this.handleItemRemove(event)   
+    this.handleLineItemChange()   
   }
 
   handleLineItemChange(event) {
@@ -75,14 +65,4 @@ export default class extends Controller {
       responseKind: "turbo-stream"
     })
   }
-  
-  handleItemRemove(event) {
-    let selectedItems = this.select.items;
-    let deletedLineItem = event.children[4].value;
-    selectedItems.forEach(item => {
-        if (item === deletedLineItem) {
-            this.select.removeItem(item);
-        }
-    });
-  } 
 }

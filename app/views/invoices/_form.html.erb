@@ -38,22 +38,21 @@
           multiple: true,
           data: {invoice_target: 'product'},
           id: 'product_id' %>
-        <%#= form.grouped_collection_select :product_id, @categories, :products, :name, :id, :name, {prompt: "select product", multiple: true}, {class: 'form-select', data: {invoice_target: "product", action: "change-> invoice#handler"}} %>
         
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-6">
             <%= form.label :item_name, class: 'form-label' %>
           </div>  
 
-          <div class="col-md-1">
+          <div class="col-md-2">
             <%= form.label :quantity, class: 'form-label' %>
           </div>  
 
-          <div class="col-md-1">
+          <div class="col-md-2">
             <%= form.label :unit_rate, class: 'form-label' %>
           </div>
 
-          <div class="col-md-1">
+          <div class="col-md-2">
             <%= form.label :unit, class: 'form-label' %>
           </div>
         </div>
