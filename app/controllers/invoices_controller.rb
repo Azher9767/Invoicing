@@ -1,7 +1,6 @@
 class InvoicesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_category, only: %i[new edit]
-  before_action :initiate_invoice, only: %i[new add_line_items]
   before_action :set_invoice, only: %i[ show edit update destroy ]
 
   # GET /invoices or /invoices.json
@@ -15,18 +14,7 @@ class InvoicesController < ApplicationController
 
   # GET /invoices/new
   def new
-  end
-
-  def add_line_items
-    @product = Product.find(params[:product_id])
-    @line_item = LineItem.new(
-      item_name: @product.name,
-      quantity: 1,
-      unit_rate: @product.unit_rate,
-      product_id: @product.id,
-      invoice_id: @invoice.id
-    )
-   
+    @invoice = Invoice.new(user: current_user, status: Invoice::DRAFT)
   end
 
   # this action is used at three scenarios
@@ -41,12 +29,6 @@ class InvoicesController < ApplicationController
       )
     end
     @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items)
-
-  end
-
-  def delete_line_items
-    @line_item = LineItem.find_by(id: params[:line_item_id])
-    @line_item.destroy if @line_item.present? && @line_item.persisted? 
   end
 
   # GET /invoices/1/edit
@@ -92,10 +74,6 @@ class InvoicesController < ApplicationController
   end
 
   private
-    def initiate_invoice
-      @invoice = Invoice.new(user: current_user, status: Invoice::DRAFT)
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_invoice
       @invoice = Invoice.find(params[:id])
