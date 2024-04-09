@@ -30,7 +30,7 @@
     </div>
 
     <div class="col-12">
-      <div data-controller="invoice">
+      <div data-controller="invoice" class= "invoice-line-items">
         <%= form.label :product_id, 'Line Items', class: 'form-label' %>
         <%= select_tag :product_id, grouped_options_for_select(categories),
           class: 'form-select',
