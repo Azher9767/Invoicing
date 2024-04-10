@@ -1,8 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { get, post, destroy } from "@rails/request.js"
 import TomSelect from 'tom-select'
-
-
 export default class extends Controller {
   static targets = ["product", "lineitem"]
 
@@ -20,7 +18,6 @@ export default class extends Controller {
           return '<div class="d-flex"><span>' + escape(data.text) + '</span></div>';
         },
         item:function(data,escape){
-          console.log(data)
           return '<div>' + escape(data.text) + '</div>';
         }
       }
@@ -29,17 +26,19 @@ export default class extends Controller {
 
   addHandler(id) {
     let productId = this.productTarget.value;
-    get(`/invoices/add_line_items?product_id=${id}`, {
+    post(`/invoices/line_items`, {
+      body: JSON.stringify({productId: id}),
       responseKind: "turbo-stream"
     });
   }
 
-  removeHandler(id) {
-    destroy(`/invoices/delete_line_items?line_item_id=${this.element.children[4].id}`, { 
+  removeHandler(event) {
+    let lineItemId = this.element.children[4].id;
+    destroy(`/invoices/line_items/${lineItemId}`, { 
       responseKind: "turbo-stream"
     });
   }
-
+ 
   handleInputChange(event) {
     this.handleLineItemChange();
   }
