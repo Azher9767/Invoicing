@@ -5,14 +5,12 @@ RSpec.describe 'Invoice', :js do
     signin(user.email, 'azher@123')
     expect(page).to have_content('Signed in successfully.')
     expect(page).to have_content('Welcome To Home')
-    
     category = create(:category, user:)
     create(:product, category:, unit_rate: 1)
   end
   
   it "creates a new invoice" do
     visit new_invoice_path
-
     within("#new_invoice_form") do
       fill_in 'Name', with: 'Jl construction'
       select 'Pending', from: 'invoice_status'

@@ -8,16 +8,16 @@ RSpec.describe 'Product' do
 
   it 'creates a new product' do
     visit new_product_path
-    
-    fill_in 'Name', with: "mobile"
-    fill_in 'Description', with: 'vivo mobile'
-    fill_in 'Unit rate', with: '2'
-    select 'Electronic', from: 'product_category_id'
-    fill_in 'Unit', with: '1'
-    click_button 'Create Product'
+    within('form[action="/products"]') do
+      fill_in 'Name', with: "mobile"
+      fill_in 'Description', with: 'vivo mobile'
+      fill_in 'Unit rate', with: '2'
+      select 'Electronic', from: 'product_category_id'
+      fill_in 'Unit', with: '1'
+      click_button 'Create Product'
+    end
 
     expect(page).to have_content('Product was successfully created.')
-
     product = Product.last
     expect(page).to have_content("Name: #{product.name}")
     expect(page).to have_content("Description: #{product.description}")
