@@ -23,7 +23,6 @@ class ProductsController < ApplicationController
   # POST /products or /products.json
   def create
     @product = Product.new(product_params)
-    @product.user_id = current_user.id
     
     # @product.category_id = product_params[:category_id] --> by doing this we can also handle the category_id
     respond_to do |format|

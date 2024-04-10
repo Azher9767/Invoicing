@@ -1,0 +1,2 @@
+<% target_id = @line_item ? "#{dom_id(@line_item)}" : "#{params[:id]}" %>
+<%= turbo_stream.remove target_id %>

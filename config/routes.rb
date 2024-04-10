@@ -5,11 +5,13 @@ Rails.application.routes.draw do
   resources :categories
   devise_for :users
 
+  namespace :invoices do
+    resources :line_items, only: [:create, :destroy]
+  end
+
   resources :invoices do
     collection do
-      get 'add_line_items'
       post 'calculate_sub_total'
-      delete 'delete_line_items'
     end
   end
   # devise_for :admin_users
