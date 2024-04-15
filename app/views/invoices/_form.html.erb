@@ -63,12 +63,23 @@
         <% invoice.line_items.each do |line_item| %>
           <%= render partial: 'line_item_fields', locals: { line_item: line_item } %>
         <% end %>
+        
       </div>
     </div>
     
     <div class="col-12">
       <%= form.label :note, class: "form-label" %>
       <%= form.text_area :note, class: 'form-control' %>
+    </div>
+
+    <div class="col-12">
+      <%= form.label :tax_or_discount, 'Tax and Discounts', class: 'form-label' %>
+      <%= select_tag :tax_or_discount, grouped_options_for_select(td_options),
+      class: 'form-select',
+      prompt: 'Select td type',
+      multiple: true,
+      data: {invoice_target: "taxOrDiscount"},
+      id: 'tax_or_discount' %>
     </div>
 
     <div>
