@@ -12,5 +12,5 @@ class Invoice < ApplicationRecord
 
   accepts_nested_attributes_for :line_items
 
-  has_many :tax_and_discount
+  has_many :tax_and_discounts
 end

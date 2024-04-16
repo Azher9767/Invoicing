@@ -27,7 +27,7 @@
   <div class="row mb-2">
     <div class="col">
       <%= form.label :td_type, class: "form-label" %>
-      <%= form.text_field :td_type, class: "form-control" %>
+      <%= form.select :td_type, TaxAndDiscount.td_types.keys.map{ |w| [w.humanize, w]}, { prompt: 'Select td' }, {class: 'form-select'} %>
     </div>
 
     <div class="col">
@@ -41,3 +41,5 @@
   </div>
   
 <% end %>
+
+

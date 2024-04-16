@@ -74,7 +74,7 @@
 
     <div class="col-12">
       <%= form.label :tax_or_discount, 'Tax and Discounts', class: 'form-label' %>
-      <%= select_tag :tax_or_discount, grouped_options_for_select(td_options),
+      <%= select_tag :tax_or_discount, grouped_options_for_select(td_options(current_user)),
       class: 'form-select',
       prompt: 'Select td type',
       multiple: true,

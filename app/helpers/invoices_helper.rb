@@ -5,10 +5,11 @@ module InvoicesHelper
     end
   end
 
-  def td_options
+  def td_options(current_user)
+    tds = current_user.tax_and_discounts
     [
-      ["Taxes", TaxAndDiscount.tax_type],
-      ["Discount", TaxAndDiscount.discount_type]
+      ["Taxes", tds.tax.map{|t| [t.name, t.id]}],
+      ["Discount", tds.discount.map{|d| [d.name, d.id]}]
     ]
   end
 end
