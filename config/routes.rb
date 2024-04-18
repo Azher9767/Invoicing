@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :invoices do
     collection do
       post 'calculate_sub_total'
+      post 'add_td_fields'
     end
   end
   # devise_for :admin_users

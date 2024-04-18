@@ -17,18 +17,39 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.new(user: current_user, status: Invoice::DRAFT)
   end
 
+  def add_td_fields
+    @tax_and_discount = TaxAndDiscount.find(params[:taxAndDiscountId])
+    @tax_and_discount_poly = TaxAndDiscountPoly.new(
+      name: @tax_and_discount.name,
+      amount: @tax_and_discount.amount,
+      td_type: @tax_and_discount.td_type,
+      tax_and_discount_id: @tax_and_discount.id
+    )
+  end
+
   # this action is used at three scenarios
   # 1. when user adds/removes a line item
   # 2. when user updates the quantity of line item
   # 3. when user updates the unit rate of line item
   def calculate_sub_total
     line_items = params[:lineItemsAttributes].map do |line_item|
-      LineItem.new(
-        quantity: line_item[:quantity].to_f,
-        unit_rate: line_item[:unitRate].to_f
+      if line_item[:quantity].present? && line_item[:unitRate].present?
+        LineItem.new(
+          quantity: line_item[:quantity].to_f,
+          unit_rate: line_item[:unitRate].to_f
+        )
+      end
+    end
+
+    tax_and_discount_poly = params[:taxAndDiscountPolyAttributes].map do |td_poly|
+      TaxAndDiscountPoly.new(
+        amount: td_poly[:amount].to_f,
+        td_type: td_poly[:td_type],
+        name: td_poly[:name]
       )
     end
-    @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items)
+    @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_poly)
+    # line_item_count = line_items.count { |item| item.is_a?(LineItem) }
   end
 
   # GET /invoices/1/edit
@@ -85,6 +106,8 @@ class InvoicesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invoice_params
-      params.require(:invoice).permit(:line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date, line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id])
+      params.require(:invoice).permit(:line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date,
+      line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id],
+      tax_and_discount_polies_attributes: [:id, :name, :td_type, :amount])
     end
 end

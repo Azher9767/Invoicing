@@ -1,0 +1,19 @@
+<%= fields_for "invoice[tax_and_discount_polies_attributes][#{tax_and_discount_poly.persisted? ? tax_and_discount_poly.id : tax_and_discount_poly.object_id}]", tax_and_discount_poly do |form|%>
+  
+    <div class="row" data-invoice-target="taxAndDiscountPoly" id="<%= dom_id(tax_and_discount_poly) %>" >
+      <div class="col-md-4">
+        <%= form.text_field :name, class: "form-control" %>
+      </div>  
+
+      <div class="col-md-4">
+        <%= form.number_field :amount, class: "form-control", data: {action: "change->invoice#handleTaxAndDiscountPolyChange" }%>
+      </div>  
+
+      <div class="col-md-4">
+        <%= form.text_field :td_type, class: "form-control" %>
+      </div>
+    </div>
+<% end %>
+
+<div id="tax_and_discount_poly">
+</div>

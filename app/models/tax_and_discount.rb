@@ -1,6 +1,6 @@
 class TaxAndDiscount < ApplicationRecord
   belongs_to :user
-  belongs_to :invoice
+  has_many :tax_and_discount_polies, as: :tax_discountable
 
   TAX = 'tax'
   DISCOUNT = 'discount'
