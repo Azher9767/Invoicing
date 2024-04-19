@@ -1,9 +1,29 @@
 class InvoiceAmountCalculator
-  def calculate_sub_total(line_items, tax_and_discount_poly)
+  def calculate_sub_total(line_items, tax_and_discount_polys)
     line_items_total = line_items.sum(&:total)
-    td_poly_total = tax_and_discount_poly.sum(&:td_amount_subtotal)
+    
+    tax_total = 0
+    discount_total = 0
+    tax_and_discount_polys.each do |td_poly|
+      if td_poly.tax_type == 'percentage'
+        if td_poly.tax?
+          tax_total += line_items_total * (td_poly.amount / 100.0)
+        elsif td_poly.discount?
+          discount_total += line_items_total * (td_poly.amount / 100.0)
+        end
 
-    line_items_total + td_poly_total
+      elsif td_poly.tax_type == 'fixed'
+        if td_poly.tax?
+          tax_total += td_poly.amount
+        elsif td_poly.discount?
+          discount_total += td_poly.amount
+        end
+      end
+    end
+
+    line_items_total + tax_total + discount_total
   end
 end
+
+
 

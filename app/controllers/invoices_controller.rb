@@ -23,7 +23,8 @@ class InvoicesController < ApplicationController
       name: @tax_and_discount.name,
       amount: @tax_and_discount.amount,
       td_type: @tax_and_discount.td_type,
-      tax_and_discount_id: @tax_and_discount.id
+      tax_and_discount_id: @tax_and_discount.id,
+      tax_type: @tax_and_discount.tax_type
     )
   end
 
@@ -41,15 +42,16 @@ class InvoicesController < ApplicationController
       end
     end
 
-    tax_and_discount_poly = params[:taxAndDiscountPolyAttributes].map do |td_poly|
+    tax_and_discount_polys = params[:taxAndDiscountPolyAttributes].map do |td_poly|
       TaxAndDiscountPoly.new(
         amount: td_poly[:amount].to_f,
         td_type: td_poly[:td_type],
-        name: td_poly[:name]
+        name: td_poly[:name],
+        tax_type: td_poly[:tax_type]
       )
     end
-    @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_poly)
-    # line_item_count = line_items.count { |item| item.is_a?(LineItem) }
+    
+    @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_polys)
   end
 
   # GET /invoices/1/edit
@@ -60,7 +62,7 @@ class InvoicesController < ApplicationController
   def create
     @invoice = Invoice.new(invoice_params)
     @invoice.user = current_user
-    @invoice.sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(@invoice.line_items)
+    @invoice.sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(@invoice.line_items, @invoice.tax_and_discount_polies)
     respond_to do |format|
       if @invoice.save
         format.html { redirect_to invoice_url(@invoice), notice: "Invoice was successfully created." }
@@ -108,6 +110,6 @@ class InvoicesController < ApplicationController
     def invoice_params
       params.require(:invoice).permit(:line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date,
       line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id],
-      tax_and_discount_polies_attributes: [:id, :name, :td_type, :amount])
+      tax_and_discount_polies_attributes: [:id, :name, :td_type, :amount, :tax_type])
     end
 end

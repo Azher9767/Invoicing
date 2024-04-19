@@ -66,6 +66,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_17_055721) do
     t.string "tax_discountable_type", null: false
     t.bigint "tax_discountable_id", null: false
     t.string "td_type", default: "", null: false
+    t.string "tax_type", default: "", null: false
     t.decimal "amount", default: "0.0", null: false
     t.bigint "invoice_id"
     t.bigint "tax_and_discount_id"
@@ -79,6 +80,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_17_055721) do
   create_table "tax_and_discounts", force: :cascade do |t|
     t.string "name"
     t.text "description"
+    t.string "tax_type"
     t.string "td_type", default: "", null: false
     t.decimal "amount", default: "0.0", null: false
     t.bigint "user_id", null: false

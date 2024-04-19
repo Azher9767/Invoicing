@@ -83,22 +83,23 @@ export default class extends Controller {
       lineItemsAttributes.push({
         quantity: lineitem.children[1].children[0].value,
         unitRate: lineitem.children[2].children[0].value
-      })
-    })
+      });
+    });
 
     let taxAndDiscountPolyAttributes = [];
     this.taxAndDiscountPolyTargets.forEach((taxAndDiscountPoly) => {
       taxAndDiscountPolyAttributes.push({
         name: taxAndDiscountPoly.children[0].children[0].value,
         amount: taxAndDiscountPoly.children[1].children[0].value,
-        td_type: taxAndDiscountPoly.children[2].children[0].value
+        td_type: taxAndDiscountPoly.children[2].children[0].value,
+        tax_type: taxAndDiscountPoly.children[3].children[0].value
       });
     });
 
     post(`/invoices/calculate_sub_total`, {
       body: JSON.stringify({lineItemsAttributes, taxAndDiscountPolyAttributes}),
       responseKind: "turbo-stream"
-    })
+    });
   }
 
   taxAndDiscountPolyTargetConnected(event) {
@@ -120,16 +121,18 @@ export default class extends Controller {
   
     let taxAndDiscountPolyAttributes = [];
     this.taxAndDiscountPolyTargets.forEach((taxAndDiscountPoly) => {
+      console.log(taxAndDiscountPoly.children[3].children[0].value)
       taxAndDiscountPolyAttributes.push({
         name: taxAndDiscountPoly.children[0].children[0].value,
         amount: taxAndDiscountPoly.children[1].children[0].value,
-        td_type: taxAndDiscountPoly.children[2].children[0].value
+        td_type: taxAndDiscountPoly.children[2].children[0].value,
+        tax_type: taxAndDiscountPoly.children[3].children[0].value
       });
     });
   
     post(`/invoices/calculate_sub_total`, {
       body: JSON.stringify({ lineItemsAttributes, taxAndDiscountPolyAttributes}),
       responseKind: "turbo-stream"
-    })
+    });
   }
 }

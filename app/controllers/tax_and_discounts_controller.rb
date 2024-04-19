@@ -67,6 +67,6 @@ class TaxAndDiscountsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def tax_and_discount_params
-      params.require(:tax_and_discount).permit(:name, :description, :td_type, :amount)
+      params.require(:tax_and_discount).permit(:name, :description, :td_type, :amount, :tax_type)
     end
 end
