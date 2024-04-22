@@ -7,12 +7,13 @@ Rails.application.routes.draw do
 
   namespace :invoices do
     resources :line_items, only: [:create, :destroy]
+    post 'add_td_fields'
+    delete 'delete_td_fields'
   end
 
   resources :invoices do
     collection do
       post 'calculate_sub_total'
-      post 'add_td_fields'
     end
   end
   # devise_for :admin_users

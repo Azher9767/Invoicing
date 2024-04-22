@@ -23,12 +23,14 @@ export default class extends Controller {
       }
     });
 
-    let addEvent = () => (...args) => this.addHandle(...args);
+    let addEventHandle = () => (...args) => this.addHandle(...args);
+    let removeEventHandle = () => (...args) => this.removeHandle(...args);
     new TomSelect("#tax_and_discount",{
       plugins: ['remove_button'],
       create: true,
       closeAfterSelect: true,
-      onItemAdd: addEvent(),
+      onItemAdd: addEventHandle(),
+      onItemRemove: removeEventHandle(),
       render:{
         option:function(data,escape){
           return '<div class="d-flex"><span>' + escape(data.text) + '</span></div>';
@@ -47,6 +49,13 @@ export default class extends Controller {
     });
   }
 
+  removeHandle(event) {
+    let taxAndDiscountId = this.element.children[10].children[0].id
+    destroy(`/invoices/delete_td_fields?taxAndDiscountId=${taxAndDiscountId}`, { 
+      responseKind: "turbo-stream"
+    });
+  }
+
   addHandler(id) {
     let productId = this.productTarget.value;
     console.log(productId)
@@ -59,6 +68,12 @@ export default class extends Controller {
   removeHandler(event) {
     let lineItemId = this.element.children[4].id;
     destroy(`/invoices/line_items/${lineItemId}`, { 
+      responseKind: "turbo-stream"
+    });
+
+    let taxAndDiscountId = this.element.children[10].children[0].id
+    console.log("ok")
+    destroy(`/invoices/delete_td_fields?taxAndDiscountId=${taxAndDiscountId}`, { 
       responseKind: "turbo-stream"
     });
   }
@@ -107,7 +122,7 @@ export default class extends Controller {
   }
 
   taxAndDiscountPolyTargetDisconnected() {
-    console.log("disconnected")
+    this.handleTaxAndDiscountPolyChange()
   }
 
   handleTaxAndDiscountPolyChange(event) {
@@ -121,7 +136,6 @@ export default class extends Controller {
   
     let taxAndDiscountPolyAttributes = [];
     this.taxAndDiscountPolyTargets.forEach((taxAndDiscountPoly) => {
-      console.log(taxAndDiscountPoly.children[3].children[0].value)
       taxAndDiscountPolyAttributes.push({
         name: taxAndDiscountPoly.children[0].children[0].value,
         amount: taxAndDiscountPoly.children[1].children[0].value,

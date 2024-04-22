@@ -28,6 +28,11 @@ class InvoicesController < ApplicationController
     )
   end
 
+  def delete_td_fields
+    @tax_and_discount_poly = TaxAndDiscountPoly.find_by(id: params[:taxAndDiscountId])
+    @tax_and_discount_poly.destroy if @tax_and_discount_poly.present? && @tax_and_discount_poly.persisted?
+  end
+
   # this action is used at three scenarios
   # 1. when user adds/removes a line item
   # 2. when user updates the quantity of line item

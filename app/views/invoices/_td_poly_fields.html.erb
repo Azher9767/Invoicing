@@ -1,22 +1,26 @@
-<%= fields_for "invoice[tax_and_discount_polies_attributes][#{tax_and_discount_poly.persisted? ? tax_and_discount_poly.id : tax_and_discount_poly.object_id}]", tax_and_discount_poly do |form|%>
-  
+<%= fields_for "invoice[tax_and_discount_polies_attributes][#{tax_and_discount_poly.persisted? ? tax_and_discount_poly.id : tax_and_discount_poly.hash}]", tax_and_discount_poly do |form|%>
+  <% if tax_and_discount_poly.persisted? %>
     <div class="row" data-invoice-target="taxAndDiscountPoly" id="<%= dom_id(tax_and_discount_poly) %>" >
-      <div class="col-md-3">
-        <%= form.text_field :name, class: "form-control" %>
-      </div>  
+  <% else %>
+    <div class="row" data-invoice-target="taxAndDiscountPoly" id="<%= tax_and_discount_poly.hash %>" >
+  <% end %>
 
-      <div class="col-md-3">
-        <%= form.number_field :amount, class: "form-control", data: {action: "change->invoice#handleTaxAndDiscountPolyChange" }%>
-      </div>  
+    <div class="col-md-3">
+      <%= form.text_field :name, class: "form-control" %>
+    </div>  
 
-      <div class="col-md-3">
-        <%= form.text_field :td_type, class: "form-control" %>
-      </div>
+    <div class="col-md-3">
+      <%= form.number_field :amount, class: "form-control", data: {action: "change->invoice#handleTaxAndDiscountPolyChange" }%>
+    </div>  
 
-      <div class="col-md-3">
-        <%= form.select :tax_type, TaxAndDiscountPoly.tax_types.keys.map{ |w| [w.humanize, w]}, {}, class: "form-control", data: {action: "change->invoice#handleTaxAndDiscountPolyChange"} %>
-      </div>
+    <div class="col-md-3">
+      <%= form.text_field :td_type, class: "form-control" %>
     </div>
+
+    <div class="col-md-3">
+      <%= form.select :tax_type, TaxAndDiscountPoly.tax_types.keys.map{ |w| [w.humanize, w]}, {}, class: "form-control", data: {action: "change->invoice#handleTaxAndDiscountPolyChange"} %>
+    </div>
+  </div>
 <% end %>
 
 <div id="tax_and_discount_poly">
