@@ -31,7 +31,7 @@ RSpec.describe InvoiceAmountCalculator do
       ]
     end
 
-    let(:tax_and_discount_poly) do
+    let(:tax_and_discount_polys) do
       [
         TaxAndDiscountPoly.new({amount: 18.0, tax_type: 'percentage'})
       ]
@@ -43,7 +43,7 @@ RSpec.describe InvoiceAmountCalculator do
 
     it "calculate subtotal for line item with tax and discount" do
       sub_total_amount = InvoiceAmountCalculator.new
-      expect(sub_total_amount.calculate_sub_total(multiple_line_items, tax_and_discount_poly)).to eq(expected_subtotal)
+      expect(sub_total_amount.calculate_sub_total(multiple_line_items, tax_and_discount_polys)).to eq(expected_subtotal)
     end
   end
 
@@ -54,7 +54,7 @@ RSpec.describe InvoiceAmountCalculator do
       ]
     end
 
-    let(:tax_and_discount_poly) do
+    let(:tax_and_discount_polys) do
       [
         TaxAndDiscountPoly.new({amount: -18.0, tax_type: 'fixed'})
       ]
@@ -66,7 +66,7 @@ RSpec.describe InvoiceAmountCalculator do
 
     it "calculate subtotal for line item with fixed tax and discount" do
       sub_total_amount = InvoiceAmountCalculator.new
-      expect(sub_total_amount.calculate_sub_total(multiple_line_items, tax_and_discount_poly)).to eq(expected_subtotal)
+      expect(sub_total_amount.calculate_sub_total(multiple_line_items, tax_and_discount_polys)).to eq(expected_subtotal)
     end
   end
 end

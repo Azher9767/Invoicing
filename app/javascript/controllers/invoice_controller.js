@@ -44,14 +44,16 @@ export default class extends Controller {
 
   addHandle(id) {
     let taxAndDiscountId = id; 
-    post(`/invoices/add_td_fields?taxAndDiscountId=${taxAndDiscountId}`, {
+    post(`/invoices/tax_and_discount_polies`, {
+      body: JSON.stringify({taxAndDiscountId}),
       responseKind: "turbo-stream"
     });
   }
 
   removeHandle(event) {
     let taxAndDiscountId = this.element.children[10].children[0].id
-    destroy(`/invoices/delete_td_fields?taxAndDiscountId=${taxAndDiscountId}`, { 
+    console.log(taxAndDiscountId)
+    destroy(`/invoices/tax_and_discount_polies/${taxAndDiscountId}`, {
       responseKind: "turbo-stream"
     });
   }
@@ -72,8 +74,7 @@ export default class extends Controller {
     });
 
     let taxAndDiscountId = this.element.children[10].children[0].id
-    console.log("ok")
-    destroy(`/invoices/delete_td_fields?taxAndDiscountId=${taxAndDiscountId}`, { 
+    destroy(`/invoices/tax_and_discount_polies/${taxAndDiscountId}`, {
       responseKind: "turbo-stream"
     });
   }
@@ -111,7 +112,7 @@ export default class extends Controller {
       });
     });
 
-    post(`/invoices/calculate_sub_total`, {
+    post(`/invoices/amount_calculations`, {
       body: JSON.stringify({lineItemsAttributes, taxAndDiscountPolyAttributes}),
       responseKind: "turbo-stream"
     });
@@ -143,9 +144,9 @@ export default class extends Controller {
         tax_type: taxAndDiscountPoly.children[3].children[0].value
       });
     });
-  
-    post(`/invoices/calculate_sub_total`, {
-      body: JSON.stringify({ lineItemsAttributes, taxAndDiscountPolyAttributes}),
+
+    post(`/invoices/amount_calculations`, {
+      body: JSON.stringify({lineItemsAttributes, taxAndDiscountPolyAttributes}),
       responseKind: "turbo-stream"
     });
   }

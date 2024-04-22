@@ -1,3 +1,0 @@
-<% target_id = @tax_and_discount_poly ? "#{dom_id(@tax_and_discount_poly)}" : "#{params[:taxAndDiscountId]}" %>
-<%= target_id.inspect %>
-<%= turbo_stream.remove target_id %>
