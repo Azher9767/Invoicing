@@ -50,9 +50,10 @@ export default class extends Controller {
     });
   }
 
-  removeHandle(event) {
+  removeHandle(id) {
+    // let taxAndDiscountId = this.taxAndDiscountPolyTarget.children[0].id
     let taxAndDiscountId = this.element.children[10].children[0].id
-    console.log(taxAndDiscountId)
+    // this.taxAndDiscountPolyTargets
     destroy(`/invoices/tax_and_discount_polies/${taxAndDiscountId}`, {
       responseKind: "turbo-stream"
     });
@@ -60,7 +61,6 @@ export default class extends Controller {
 
   addHandler(id) {
     let productId = this.productTarget.value;
-    console.log(productId)
     post(`/invoices/line_items`, {
       body: JSON.stringify({productId: id}),
       responseKind: "turbo-stream"
@@ -94,7 +94,6 @@ export default class extends Controller {
 
   handleLineItemChange(event) {
     let lineItemsAttributes = [];
-    
     this.lineitemTargets.forEach((lineitem) => {
       lineItemsAttributes.push({
         quantity: lineitem.children[1].children[0].value,

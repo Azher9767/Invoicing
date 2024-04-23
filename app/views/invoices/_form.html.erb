@@ -91,6 +91,11 @@
 
         <div id="tax_and_discount_poly">
         </div>
+
+        <% invoice.tax_and_discount_polies.each do |tax_and_discount_poly| %>
+          <%= render partial: 'td_poly_fields', locals: { tax_and_discount_poly: tax_and_discount_poly } %>
+        <% end %>
+
       </div>
     </div>
     

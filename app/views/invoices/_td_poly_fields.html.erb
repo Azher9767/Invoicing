@@ -20,6 +20,8 @@
     <div class="col-md-3">
       <%= form.select :tax_type, TaxAndDiscountPoly.tax_types.keys.map{ |w| [w.humanize, w]}, {}, class: "form-control", data: {action: "change->invoice#handleTaxAndDiscountPolyChange"} %>
     </div>
+
+    <%= form.hidden_field :id %>
   </div>
 <% end %>
 
