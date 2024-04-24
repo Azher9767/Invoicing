@@ -5,8 +5,8 @@ export default class extends Controller {
   static targets = ["lineitem", "taxAndDiscountPoly", "product"]
 
   connect() {
-    let addEventHandler = () => (...args) => this.addHandler(...args);
-    let removeEventHandler = () => (...args) => this.removeHandler(...args);
+    let addEventHandler = () => (...args) => this.addLineItem(...args);
+    let removeEventHandler = () => (...args) => this.removeLineItem(...args);
     new TomSelect("#product_id", {
       plugins: ['remove_button'],
       create: true,
@@ -23,8 +23,8 @@ export default class extends Controller {
       }
     });
 
-    let addEventHandle = () => (...args) => this.addHandle(...args);
-    let removeEventHandle = () => (...args) => this.removeHandle(...args);
+    let addEventHandle = () => (...args) => this.addTaxAndDiscount(...args);
+    let removeEventHandle = () => (...args) => this.removeTaxAndDiscount(...args);
     new TomSelect("#tax_and_discount",{
       plugins: ['remove_button'],
       create: true,
@@ -42,7 +42,7 @@ export default class extends Controller {
     });
   }
 
-  addHandle(id) {
+  addTaxAndDiscount(id) {
     let taxAndDiscountId = id; 
     post(`/invoices/tax_and_discount_polies`, {
       body: JSON.stringify({taxAndDiscountId}),
@@ -50,7 +50,7 @@ export default class extends Controller {
     });
   }
 
-  removeHandle(id) {
+  removeTaxAndDiscount(id) {
     // let taxAndDiscountId = this.taxAndDiscountPolyTarget.children[0].id
     let taxAndDiscountId = this.element.children[10].children[0].id
     // this.taxAndDiscountPolyTargets
@@ -59,7 +59,7 @@ export default class extends Controller {
     });
   }
 
-  addHandler(id) {
+  addLineItem(id) {
     let productId = this.productTarget.value;
     post(`/invoices/line_items`, {
       body: JSON.stringify({productId: id}),
@@ -67,8 +67,14 @@ export default class extends Controller {
     });
   }
 
-  removeHandler(event) {
-    let lineItemId = this.element.children[4].id;
+  // Three conditions to remove line item
+  // 1. id will be as productId
+  // 2. id will be as line item name
+  // 3. id will be as line item data with semicolon
+  removeLineItem(id) {
+    let lineItem = this.lineitemTargets.find((lineitem) => lineitem.dataset.params == id);
+    const lineItemId = lineItem.id
+    
     destroy(`/invoices/line_items/${lineItemId}`, { 
       responseKind: "turbo-stream"
     });
