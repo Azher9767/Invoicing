@@ -11,11 +11,11 @@ module TaxAndDiscountValidations
     enum td_type: {tax: TAX, discount: DISCOUNT}
   end
 
-  def tax
+  def tax?
     amount > 0
   end
 
-  def discount
+  def discount?
     amount < 0
   end
 end

@@ -1,3 +1,11 @@
+# this Invoices module class action is used at six scenarios
+# 1. when user adds/removes a line item and tax and discount fields
+# 2. when user updates the quantity of line item
+# 3. when user updates the unit rate of line item
+# 4. when user updates the amount of tax and discount
+# 5. when user updates the tax type of tax and discount
+# 6. when user updates the td type of tax and discount
+
 module Invoices
   class AmountCalculationsController < ApplicationController
     def calculate_sub_total
@@ -23,8 +31,3 @@ module Invoices
     end
   end
 end
-
-  # this action is used at three scenarios
-  # 1. when user adds/removes a line item
-  # 2. when user updates the quantity of line item
-  # 3. when user updates the unit rate of line item

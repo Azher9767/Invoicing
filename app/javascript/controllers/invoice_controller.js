@@ -66,10 +66,12 @@ export default class extends Controller {
     });
   }
 
-  // Three conditions to remove line item
-  // 1. id will be as productId
-  // 2. id will be as line item name
-  // 3. id will be as line item data with semicolon
+  // removeLineItem function use to find a line item based on the data-params attribute (lineitem.dataset.params) 
+  //  Using the data-params attribute specifying the conditions for removing a line item
+  // example: ID
+  // a Number(1)
+  // a Text(Work)
+  // a Text(Work;10;10)
   removeLineItem(id) {
     let lineItem = this.lineitemTargets.find((lineitem) => lineitem.dataset.params == id);
     const lineItemId = lineItem.id

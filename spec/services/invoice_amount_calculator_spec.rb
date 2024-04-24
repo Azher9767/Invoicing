@@ -23,7 +23,7 @@ RSpec.describe InvoiceAmountCalculator do
     end
   end
 
-  context "for non fixe tax and discount" do
+  context "for non fixed tax and discount" do
     let(:multiple_line_items) do
       [ 
         LineItem.new({unit_rate: 100.0, quantity: 2.0}), 

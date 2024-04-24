@@ -41,17 +41,7 @@ class InvoicesController < ApplicationController
   # PATCH/PUT /invoices/1 or /invoices/1.json
   def update
     respond_to do |format|
-      line_items = invoice_params[:line_items_attributes].values.map do |line_item_params|
-        LineItem.new(line_item_params) 
-      end
-
-      tax_and_discount_polys = invoice_params[:tax_and_discount_polies_attributes].values.map do |td_params|
-        TaxAndDiscountPoly.new(td_params)
-      end
-
-      sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_polys)
-
-      if @invoice.update(**invoice_params, sub_total: sub_total)
+      if @invoice.update(invoice_params)
         format.html { redirect_to invoice_url(@invoice), notice: "Invoice was successfully updated." }
         format.json { render :show, status: :ok, location: @invoice }
       else
@@ -63,7 +53,6 @@ class InvoicesController < ApplicationController
 
   # DELETE /invoices/1 or /invoices/1.json
   def destroy
-    @invoice.line_items.destroy_all
     @invoice.destroy!
     respond_to do |format|
       format.html { redirect_to invoices_url, notice: "Invoice was successfully destroyed." }
