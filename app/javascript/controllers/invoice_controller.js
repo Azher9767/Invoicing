@@ -51,9 +51,8 @@ export default class extends Controller {
   }
 
   removeTaxAndDiscount(id) {
-    // let taxAndDiscountId = this.taxAndDiscountPolyTarget.children[0].id
-    let taxAndDiscountId = this.element.children[10].children[0].id
-    // this.taxAndDiscountPolyTargets
+    let taxAndDiscount = this.taxAndDiscountPolyTargets.find((taxAndDiscountPoly) => taxAndDiscountPoly.dataset.params == id);
+    const taxAndDiscountId = taxAndDiscount.id
     destroy(`/invoices/tax_and_discount_polies/${taxAndDiscountId}`, {
       responseKind: "turbo-stream"
     });
@@ -74,13 +73,7 @@ export default class extends Controller {
   removeLineItem(id) {
     let lineItem = this.lineitemTargets.find((lineitem) => lineitem.dataset.params == id);
     const lineItemId = lineItem.id
-    
     destroy(`/invoices/line_items/${lineItemId}`, { 
-      responseKind: "turbo-stream"
-    });
-
-    let taxAndDiscountId = this.element.children[10].children[0].id
-    destroy(`/invoices/tax_and_discount_polies/${taxAndDiscountId}`, {
       responseKind: "turbo-stream"
     });
   }

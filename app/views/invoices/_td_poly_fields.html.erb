@@ -1,8 +1,8 @@
 <%= fields_for "invoice[tax_and_discount_polies_attributes][#{tax_and_discount_poly.persisted? ? tax_and_discount_poly.id : tax_and_discount_poly.hash}]", tax_and_discount_poly do |form|%>
   <% if tax_and_discount_poly.persisted? %>
-    <div class="row" data-invoice-target="taxAndDiscountPoly" id="<%= dom_id(tax_and_discount_poly) %>" >
+    <div class="row" data-invoice-target="taxAndDiscountPoly" id="<%= dom_id(tax_and_discount_poly) %>" data-params=<%= params %>>
   <% else %>
-    <div class="row" data-invoice-target="taxAndDiscountPoly" id="<%= tax_and_discount_poly.hash %>" >
+    <div class="row" data-invoice-target="taxAndDiscountPoly" id="<%= tax_and_discount_poly.hash %>" data-params=<%= params %>>
   <% end %>
 
     <div class="col-md-3">
