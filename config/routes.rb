@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   namespace :invoices do
     resources :line_items, only: [:create, :destroy]
     resources :tax_and_discount_polies, only: [:create, :destroy]
-    post 'amount_calculations', to: 'amount_calculations#calculate_sub_total'
+    post 'calculator', to: 'calculator#calculate_sub_total'
   end
 
   resources :invoices do

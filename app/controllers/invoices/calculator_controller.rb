@@ -7,7 +7,7 @@
 # 6. when user updates the td type of tax and discount
 
 module Invoices
-  class AmountCalculationsController < ApplicationController
+  class CalculatorController < ApplicationController
     def calculate_sub_total
       line_items = params[:lineItemsAttributes].map do |line_item|
         if line_item[:quantity].present? && line_item[:unitRate].present?
@@ -22,8 +22,7 @@ module Invoices
         TaxAndDiscountPoly.new(
           amount: td_poly[:amount].to_f,
           td_type: td_poly[:td_type],
-          name: td_poly[:name],
-          tax_type: td_poly[:tax_type]
+          name: td_poly[:name]
         )
       end
       

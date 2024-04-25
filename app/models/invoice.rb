@@ -8,7 +8,7 @@ class Invoice < ApplicationRecord
   enum status: { draft: DRAFT, pending: PENDING, paid: PAID }
 
   validates :status, presence: true, inclusion: { in: statuses.keys }
-
+ 
   has_many :line_items, dependent: :destroy
 
   accepts_nested_attributes_for :line_items
@@ -16,14 +16,12 @@ class Invoice < ApplicationRecord
   has_many :tax_and_discounts
 
   accepts_nested_attributes_for :tax_and_discount_polies
-
+ 
   before_save :calculate_sub_total
 
   private
 
   def calculate_sub_total
-    line_items = self.line_items
-    tax_and_discount_polies = self.tax_and_discount_polies
     self.sub_total = InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_polies)
   end
 end

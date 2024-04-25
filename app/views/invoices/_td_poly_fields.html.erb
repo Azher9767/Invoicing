@@ -5,20 +5,16 @@
     <div class="row" data-invoice-target="taxAndDiscountPoly" id="<%= tax_and_discount_poly.hash %>" data-params=<%= params %>>
   <% end %>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
       <%= form.text_field :name, class: "form-control" %>
     </div>  
 
-    <div class="col-md-3">
+    <div class="col-md-4">
       <%= form.number_field :amount, class: "form-control", data: {action: "change->invoice#handleTaxAndDiscountPolyChange" }%>
     </div>  
 
-    <div class="col-md-3">
+    <div class="col-md-4">
       <%= form.text_field :td_type, class: "form-control" %>
-    </div>
-
-    <div class="col-md-3">
-      <%= form.select :tax_type, TaxAndDiscountPoly.tax_types.keys.map{ |w| [w.humanize, w]}, {}, class: "form-control", data: {action: "change->invoice#handleTaxAndDiscountPolyChange"} %>
     </div>
 
     <%= form.hidden_field :id %>

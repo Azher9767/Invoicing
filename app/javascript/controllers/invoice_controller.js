@@ -107,12 +107,11 @@ export default class extends Controller {
       taxAndDiscountPolyAttributes.push({
         name: taxAndDiscountPoly.children[0].children[0].value,
         amount: taxAndDiscountPoly.children[1].children[0].value,
-        td_type: taxAndDiscountPoly.children[2].children[0].value,
-        tax_type: taxAndDiscountPoly.children[3].children[0].value
+        td_type: taxAndDiscountPoly.children[2].children[0].value
       });
     });
 
-    post(`/invoices/amount_calculations`, {
+    post(`/invoices/calculator`, {
       body: JSON.stringify({lineItemsAttributes, taxAndDiscountPolyAttributes}),
       responseKind: "turbo-stream"
     });
@@ -140,12 +139,11 @@ export default class extends Controller {
       taxAndDiscountPolyAttributes.push({
         name: taxAndDiscountPoly.children[0].children[0].value,
         amount: taxAndDiscountPoly.children[1].children[0].value,
-        td_type: taxAndDiscountPoly.children[2].children[0].value,
-        tax_type: taxAndDiscountPoly.children[3].children[0].value
+        td_type: taxAndDiscountPoly.children[2].children[0].value
       });
     });
 
-    post(`/invoices/amount_calculations`, {
+    post(`/invoices/calculator`, {
       body: JSON.stringify({lineItemsAttributes, taxAndDiscountPolyAttributes}),
       responseKind: "turbo-stream"
     });

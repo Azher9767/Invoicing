@@ -7,8 +7,7 @@ module Invoices
           name: @tax_and_discount.name,
           amount: @tax_and_discount.amount,
           td_type: @tax_and_discount.td_type,
-          tax_and_discount_id: @tax_and_discount.id,
-          tax_type: @tax_and_discount.tax_type
+          tax_and_discount_id: @tax_and_discount.id
         )
       else
         name, amount, td_type, tax_type = params[:taxAndDiscountId].split(';')
@@ -17,7 +16,6 @@ module Invoices
           amount: amount || 0.0,
           td_type: td_type == 'discount' ? 'discount' : 'tax' ,
           tax_and_discount_id: nil,
-          tax_type: tax_type == 'percentage' ? 'percentage' : 'fixed',
         )
       end
     end
