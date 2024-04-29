@@ -17,20 +17,6 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.new(user: current_user, status: Invoice::DRAFT)
   end
 
-  # this action is used at three scenarios
-  # 1. when user adds/removes a line item
-  # 2. when user updates the quantity of line item
-  # 3. when user updates the unit rate of line item
-  def calculate_sub_total
-    line_items = params[:lineItemsAttributes].map do |line_item|
-      LineItem.new(
-        quantity: line_item[:quantity].to_f,
-        unit_rate: line_item[:unitRate].to_f
-      )
-    end
-    @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items)
-  end
-
   # GET /invoices/1/edit
   def edit
   end
@@ -39,7 +25,6 @@ class InvoicesController < ApplicationController
   def create
     @invoice = Invoice.new(invoice_params)
     @invoice.user = current_user
-    @invoice.sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(@invoice.line_items)
     respond_to do |format|
       if @invoice.save
         format.html { redirect_to invoice_url(@invoice), notice: "Invoice was successfully created." }
@@ -85,6 +70,8 @@ class InvoicesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invoice_params
-      params.require(:invoice).permit(:line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date, line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id])
+      params.require(:invoice).permit(:line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date,
+      line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id],
+      tax_and_discount_polies_attributes: [:id, :name, :td_type, :amount])
     end
 end

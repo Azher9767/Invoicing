@@ -1,8 +1,9 @@
 <%= fields_for "invoice[line_items_attributes][#{line_item.persisted? ? line_item.id : line_item.hash}]", line_item do |form|%>
+
   <% if line_item.persisted? %>
-    <div class="row" data-invoice-target="lineitem" id="<%= dom_id(line_item) %>" >
+    <div class="row" data-invoice-target="lineitem" id="<%= dom_id(line_item) %>" data-params=<%= params %>>
   <% else %>
-    <div class="row" data-invoice-target="lineitem" id="<%= line_item.hash %>" >
+    <div class="row" data-invoice-target="lineitem" id="<%= line_item.hash %>" data-params=<%= params %>>
   <% end %>
   
     <div class="col-md-6">

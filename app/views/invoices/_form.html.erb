@@ -64,22 +64,41 @@
           <%= render partial: 'line_item_fields', locals: { line_item: line_item } %>
         <% end %>
         
+        <%= form.label :tax_and_discount, 'Tax and Discounts', class: 'form-label' %>
+        <%= select_tag :tax_and_discount, grouped_options_for_select(td_options(current_user)),
+          class: 'form-select',
+          prompt: 'Select td type',
+          multiple: true,
+          id: 'tax_and_discount' %>
+
+        <div class="row">
+          <div class="col-md-4">
+            <%= form.label :name, class: 'form-label' %>
+          </div>  
+
+          <div class="col-md-4">
+            <%= form.label :amount, class: 'form-label' %>
+          </div>  
+
+          <div class="col-md-4">
+            <%= form.label :td_type, class: 'form-label' %>
+          </div>
+
+        </div>
+
+        <div id="tax_and_discount_poly">
+        </div>
+
+        <% invoice.tax_and_discount_polies.each do |tax_and_discount_poly| %>
+          <%= render partial: 'td_poly_fields', locals: { tax_and_discount_poly: tax_and_discount_poly } %>
+        <% end %>
+
       </div>
     </div>
     
     <div class="col-12">
       <%= form.label :note, class: "form-label" %>
       <%= form.text_area :note, class: 'form-control' %>
-    </div>
-
-    <div class="col-12">
-      <%= form.label :tax_or_discount, 'Tax and Discounts', class: 'form-label' %>
-      <%= select_tag :tax_or_discount, grouped_options_for_select(td_options(current_user)),
-      class: 'form-select',
-      prompt: 'Select td type',
-      multiple: true,
-      data: {invoice_target: "taxOrDiscount"},
-      id: 'tax_or_discount' %>
     </div>
 
     <div>

@@ -1,8 +1,7 @@
 class TaxAndDiscount < ApplicationRecord
   belongs_to :user
-  belongs_to :invoice
+  has_many :tax_and_discount_polies, as: :tax_discountable
+  validates :name, :amount, :td_type, presence: true
 
-  TAX = 'tax'
-  DISCOUNT = 'discount'
-  enum td_type: {tax: TAX, discount: DISCOUNT}
+  include TaxAndDiscountQueries
 end

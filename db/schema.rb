@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_18_130805) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_17_055721) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,11 +61,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_130805) do
     t.index ["category_id"], name: "index_products_on_category_id"
   end
 
+  create_table "tax_and_discount_polies", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "tax_discountable_type", null: false
+    t.bigint "tax_discountable_id", null: false
+    t.string "td_type", null: false
+    t.decimal "amount", null: false
+    t.bigint "invoice_id"
+    t.bigint "tax_and_discount_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invoice_id"], name: "index_tax_and_discount_polies_on_invoice_id"
+    t.index ["tax_and_discount_id"], name: "index_tax_and_discount_polies_on_tax_and_discount_id"
+    t.index ["tax_discountable_type", "tax_discountable_id"], name: "index_tax_and_discount_polies_on_tax_discountable"
+  end
+
   create_table "tax_and_discounts", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.text "description"
-    t.string "td_type", default: "", null: false
-    t.decimal "amount", default: "0.0", null: false
+    t.string "td_type", null: false
+    t.decimal "amount", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -89,5 +104,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_130805) do
   add_foreign_key "line_items", "invoices"
   add_foreign_key "line_items", "products"
   add_foreign_key "products", "categories"
+  add_foreign_key "tax_and_discount_polies", "invoices"
+  add_foreign_key "tax_and_discount_polies", "tax_and_discounts"
   add_foreign_key "tax_and_discounts", "users"
 end
