@@ -72,6 +72,6 @@ class InvoicesController < ApplicationController
     def invoice_params
       params.require(:invoice).permit(:line_items_count, :name, :status, :sub_total, :note, :payment_date, :due_date,
       line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id],
-      tax_and_discount_polies_attributes: [:id, :name, :td_type, :amount, :tax_type])
+      tax_and_discount_polies_attributes: [:id, :name, :td_type, :amount])
     end
 end
