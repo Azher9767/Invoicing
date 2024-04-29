@@ -7,7 +7,7 @@ module TaxAndDiscountQueries
   included do
     enum td_type: {tax: TAX, discount: DISCOUNT}
   end
-
+  
   def tax?
     amount > 0
   end
