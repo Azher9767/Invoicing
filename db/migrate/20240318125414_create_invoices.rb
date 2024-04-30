@@ -5,6 +5,7 @@ class CreateInvoices < ActiveRecord::Migration[7.1]
       t.integer :line_items_count
       t.string :name
       t.string :status
+      t.decimal :total
       t.decimal :sub_total
       t.text :note
       t.datetime :payment_date
