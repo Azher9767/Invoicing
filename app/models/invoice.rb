@@ -25,7 +25,6 @@ class Invoice < ApplicationRecord
   private
 
   def calculate_sub_total
-    self.total = InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_polies)
-    self.sub_total = InvoiceAmountCalculator.new.calculate_total(line_items, tax_and_discount_polies)
+    self.total, self.sub_total = InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_polies)
   end
 end

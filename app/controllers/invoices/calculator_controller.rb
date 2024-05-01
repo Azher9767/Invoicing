@@ -26,9 +26,7 @@ module Invoices
         )
       end
       
-      @total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_polys)
-      @sub_total = ::InvoiceAmountCalculator.new.calculate_total(line_items, tax_and_discount_polys)
-      @tax_or_discount = ::InvoiceAmountCalculator.new.tax_or_discount(line_items, tax_and_discount_polys)
+      @total, @sub_total, @tax_or_discount = InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_polys)
     end
   end
 end

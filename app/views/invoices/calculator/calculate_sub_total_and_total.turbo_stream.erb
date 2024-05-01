@@ -8,12 +8,11 @@
 
 <%= turbo_stream.update "tax_or_discount" do %>
   <% tax_total, discount_total = @tax_or_discount %>
-  <% if tax_total > 0 %>
+  <% if tax_total.present? && tax_total > 0 %>
     <p>Tax: <%= number_to_currency(tax_total) %></p>
   <% end %>
 
-  <% if discount_total < 0 %>
+  <% if discount_total.present? && discount_total < 0 %>
     <p>Discount: <%= number_to_currency(discount_total) %></p>
   <% end %>
 <% end %>
-
