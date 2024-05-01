@@ -28,7 +28,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_17_055721) do
     t.integer "line_items_count"
     t.string "name"
     t.string "status"
-    t.decimal "total"
+    t.decimal "total", default: "0.0", null: false
     t.decimal "sub_total"
     t.text "note"
     t.datetime "payment_date"

@@ -8,7 +8,7 @@
 
 module Invoices
   class CalculatorController < ApplicationController
-    def calculate_sub_total_and_total
+    def create
       line_items = params[:lineItemsAttributes].map do |line_item|
         if line_item[:quantity].present? && line_item[:unitRate].present?
           LineItem.new(
