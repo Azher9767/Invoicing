@@ -5,19 +5,7 @@
     <%= render "form", invoice: @invoice %>
   </div>
   <div class="flex-column flex-lg-row-auto w-150 w-xl-200px mb-10">
-    <div class="card text-dark bg-light mb-3" style="width: 11rem;">
-      <div class="card-body">
-        <h5 class="card-title">Summary</h5>
-        <div id="subtotal">
-          <p>Subtotal: <%= number_to_currency(0.0) %></p>
-        </div>
-        <div id="tax_or_discount">
-        </div>
-        <div id="total">
-         <p>Total: <%= number_to_currency(0.0) %></p>
-       </div>
-      </div>
-    </div>
+    <%= render partial: "summary_section", locals: { subtotal: @subtotal, tax_or_discount: @tax_or_discount, total: @total } %>
   </div>
 </div>
 
