@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_17_055721) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_01_112342) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -28,12 +28,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_17_055721) do
     t.integer "line_items_count"
     t.string "name"
     t.string "status"
-    t.decimal "sub_total"
     t.text "note"
     t.datetime "payment_date"
     t.date "due_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "total", default: "0.0", null: false
+    t.decimal "sub_total", default: "0.0", null: false
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 

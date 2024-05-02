@@ -12,7 +12,10 @@ class InvoiceAmountCalculator
         end
       end
 
-      line_items_total + tax_total + discount_total
+      total = line_items_total + tax_total + discount_total
+      sub_total = line_items_total
+      tax_or_discount = [tax_total, discount_total ]
+      [total, sub_total, tax_or_discount]
     else
       0.0
     end

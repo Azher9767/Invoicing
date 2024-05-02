@@ -8,7 +8,7 @@
 
 module Invoices
   class CalculatorController < ApplicationController
-    def calculate_sub_total
+    def create
       line_items = params[:lineItemsAttributes].map do |line_item|
         if line_item[:quantity].present? && line_item[:unitRate].present?
           LineItem.new(
@@ -26,7 +26,7 @@ module Invoices
         )
       end
       
-      @sub_total = ::InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_polys)
+      @total, @sub_total, @tax_or_discount = InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_polys)
     end
   end
 end

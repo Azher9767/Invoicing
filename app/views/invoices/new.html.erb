@@ -1,13 +1,11 @@
 <h1>New invoice</h1>
 
 <div class="d-flex flex-column flex-xl-row">
-  <div class="flex-lg-row-fluid me-lg-10">
+  <div class="flex-lg-row-fluid me-lg-5 me-xl-3 mb-3">
     <%= render "form", invoice: @invoice %>
   </div>
   <div class="flex-column flex-lg-row-auto w-150 w-xl-200px mb-10">
-    <div id="subtotal">
-      <p>Subtotal: <%= number_to_currency(0.0) %></p>
-    </div>
+    <%= render partial: "summary_section", locals: { subtotal: @subtotal, tax_or_discount: @tax_or_discount, total: @total } %>
   </div>
 </div>
 
