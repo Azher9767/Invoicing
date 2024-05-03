@@ -35,7 +35,6 @@ RSpec.describe FormPresenter do
       html_msg = presenter.error_container_for(:name)
       expected_msg = "<div class=\"invalid-feedback\" id=\"name_aria\">can't be blank</div>"
       expect(html_msg).to eq(expected_msg)
-      puts ">>#{category}"
     end
   end
 end

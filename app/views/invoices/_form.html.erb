@@ -1,29 +1,22 @@
 <div class="p-5 mb-4 bg-body-tertiary rounded-3">
   <%= form_with(model: invoice, id: "new_invoice_form", class: 'row g-3') do |form| %>
-    <% if invoice.errors.any? %>
-      <div style="color: red">
-        <h2><%= pluralize(invoice.errors.count, "error") %> prohibited this invoice from being saved:</h2>
-
-        <ul>
-          <% invoice.errors.each do |error| %>
-            <li><%= error.full_message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-    
+    <% presenter = FormPresenter.new(invoice, self, 'form-control') %>
     <div class="col-md-3">
-      <%= form.label :name, class: "form-label" %>
-      <%= form.text_field :name, class: 'form-control' %>
+      <%= presenter.label(:name, 'form-label') %>
+      <%= form.text_field :name, presenter.input_field_options(:name, 'form-control') %>
+      <%= presenter.error_container_for(:name) %>
     </div>
+
     <div class="col-md-3">
       <%= form.label :status, class: 'form-label' %>
       <%= form.select :status, Invoice.statuses.keys.map{ |w| [w.humanize, w]}, { prompt: 'Select Status' }, {class: 'form-select'} %>
     </div>
+
     <div class="col-md-3">
       <%= form.label :due_date, class: 'form-label' %>
       <%= form.date_field :due_date, class: 'form-control' %>
     </div>
+
     <div class="col-md-3">
       <%= form.label :payment_date, class: 'form-label' %>
       <%= form.date_field :payment_date, class: 'form-control' %>
@@ -31,14 +24,14 @@
 
     <div class="col-12">
       <div data-controller="invoice">
-        <%= form.label :product_id, 'Line Items', class: 'form-label' %>
-        <%= select_tag :product_id, grouped_options_for_select(categories),
-          class: 'form-select',
-          prompt: 'Select Line Item',
-          multiple: true,
-          data: {invoice_target: 'product'},
-          id: 'product_id' %>
-        
+      <%= presenter.label(:line_items, 'form-label') %>
+      <%= select_tag :product_id, grouped_options_for_select(categories),
+        class: "form-select #{'is-invalid' if invoice.errors[:line_items].any? } ",
+        prompt: 'Select Line Item',
+        multiple: true,
+        data: {invoice_target: 'product'},
+        id: 'product_id' %>
+    
         <div class="row">
           <div class="col-md-6">
             <%= form.label :item_name, class: 'form-label' %>
@@ -106,3 +99,5 @@
     </div>
   <% end %>
 </div>
+
+<%= invoice.errors[:tax_and_discount_polies].inspect %>

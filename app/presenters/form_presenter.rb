@@ -1,17 +1,19 @@
 class FormPresenter
-  extend Dry::Initializer
-
-  param :model
-  param :template
-  param :default_class
+  attr_reader :model, :template, :default_class
 
   FORM_INVALID = '%s %s is-invalid'
   ARIA = '%s_aria'
   INVALID_FEEDBACK = 'invalid-feedback'
   REQUIRED = 'required %s'
 
+  def initialize(model, template, default_class)
+    @model = model
+    @template = template
+    @default_class = default_class
+  end
+
   def input_field_options(attr, html_class = nil, options = {})
-    if errors[attr].present?
+    if errors[attr].present? 
       {
         class: format(FORM_INVALID, default_class, html_class),
         aria: { describedby: format(ARIA, attr) }
