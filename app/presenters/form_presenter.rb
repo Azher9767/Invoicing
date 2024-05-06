@@ -13,10 +13,14 @@ class FormPresenter
   end
 
   def input_field_options(attr, html_class = nil, options = {})
-    if errors[attr].present? 
+    if attr == :line_item && errors[attr].present?
       {
         class: format(FORM_INVALID, default_class, html_class),
         aria: { describedby: format(ARIA, attr) }
+      }
+    elsif errors[attr].present?
+      {
+        class: format(FORM_INVALID, default_class, html_class)
       }
     else
       { class: "#{default_class} #{html_class}".strip }

@@ -1,5 +1,5 @@
 <%= fields_for "invoice[line_items_attributes][#{line_item.persisted? ? line_item.id : line_item.hash}]", line_item do |form|%>
-
+  <% presenter = FormPresenter.new(line_item, self, 'form-control') %>
   <% if line_item.persisted? %>
     <div class="row" data-invoice-target="lineitem" id="<%= dom_id(line_item) %>" data-params=<%= params %>>
   <% else %>
@@ -7,11 +7,13 @@
   <% end %>
   
     <div class="col-md-6">
-      <%= form.text_field :item_name, class: "form-control" %>
+      <%= form.text_field :item_name, presenter.input_field_options(:item_name, 'form-control') %>
+      <%= presenter.error_container_for(:item_name) %>
     </div>  
 
     <div class="col-md-2">
-      <%= form.number_field :quantity, class: "form-control", data: {action: "change->invoice#handleInputChange" } %>
+      <%= form.number_field :quantity, presenter.input_field_options(:quantity, "form-control", data: {action: "change->invoice#handleInputChange" }) %>
+      <%= presenter.error_container_for(:quantity) %>
     </div>  
 
     <div class="col-md-2">
