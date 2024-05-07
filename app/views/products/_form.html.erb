@@ -1,22 +1,10 @@
 <%= form_with(model: product) do |form| %>
-  <% if product.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
-
-      <ul>
-        <% product.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
- 
-  
+  <% presenter = FormPresenter.new(product, self, 'form-control') %>
   <div class="row mb-3">
     <div class="col">
-      <%= form.label :name, class: "form-label" %>
-      <%= form.text_field :name, class: "form-control" %>
+      <%= presenter.label(:name, 'form-label') %>
+      <%= form.text_field :name, presenter.field_options(:name, 'form-control') %>
+      <%= presenter.error_container_for(:name) %>
     </div>
 
     <div class="col">
@@ -30,8 +18,9 @@
     </div>
 
     <div class="col">
-      <%= form.label :category_id, class: "form-label" %>
-      <%= form.select :category_id, options_for_select(current_user.categories.map { |category| [category.name, category.id ] }), {prompt: "select category"}, class: "form-select" %>
+      <%= presenter.label(:category_id, 'form-label') %>
+      <%= form.select :category_id, options_for_select(current_user.categories.map { |category| [category.name, category.id ] }), {prompt: "select category"}, presenter.field_options(:category_id, 'form-select') %>
+      <%= presenter.error_container_for(:category_id) %>
     </div>
 
     <div class="col">

@@ -1,25 +1,20 @@
 <%= form_with(model: category) do |form| %>
-  <% if category.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(category.errors.count, "error") %> prohibited this category from being saved:</h2>
-
-      <ul>
-        <% category.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="row mb-3">
-    <div class="col">
-      <%= form.label :name, class: "form-label" %>
-      <%= form.text_field :name, class: "form-control" %>
+  <% presenter = FormPresenter.new(category, self, 'form-control') %>
+  <div class="card-body border-top p-9">
+    <div class="row mb-6">
+      <%= presenter.label(:name, 'form-label') %>
+      <div class="col-lg-8 fv-row">
+        <%= form.text_field :name, presenter.field_options(:name, 'form-control') %>
+        <%= presenter.error_container_for(:name) %>
+      </div>
     </div>
 
-    <div class="col">
-      <%= form.label :product_count, class: "form-label" %>
-      <%= form.number_field :product_count, class: "form-control" %>
+    <div class="row mb-6">
+      <%= presenter.label(:product_count, 'form-label') %>
+      <div class="col-lg-8 fv-row">
+        <%= form.number_field :product_count, presenter.field_options(:product_count) %>
+        <%= presenter.error_container_for(:product_count) %>
+      </div>
     </div>
   </div>
 
