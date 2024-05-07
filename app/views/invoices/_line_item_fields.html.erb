@@ -7,12 +7,12 @@
   <% end %>
   
     <div class="col-md-6">
-      <%= form.text_field :item_name, presenter.input_field_options(:item_name, 'form-control') %>
+      <%= form.text_field :item_name, presenter.field_options(:item_name, 'form-control') %>
       <%= presenter.error_container_for(:item_name) %>
     </div>  
 
     <div class="col-md-2">
-      <%= form.number_field :quantity, presenter.input_field_options(:quantity, "form-control", data: {action: "change->invoice#handleInputChange" }) %>
+      <%= form.number_field :quantity, presenter.field_options(:quantity, "form-control", data: {action: "change->invoice#handleInputChange" }) %>
       <%= presenter.error_container_for(:quantity) %>
     </div>  
 

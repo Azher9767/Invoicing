@@ -3,7 +3,7 @@
   <div class="row mb-3">
     <div class="col">
       <%= presenter.label(:name, 'form-label') %>
-      <%= form.text_field :name, presenter.input_field_options(:name, 'form-control') %>
+      <%= form.text_field :name, presenter.field_options(:name, 'form-control') %>
       <%= presenter.error_container_for(:name) %>
     </div>
 
@@ -19,7 +19,7 @@
 
     <div class="col">
       <%= presenter.label(:category_id, 'form-label') %>
-      <%= form.select :category_id, options_for_select(current_user.categories.map { |category| [category.name, category.id ] }), {prompt: "select category"}, presenter.input_field_options(:category_id, 'form-select') %>
+      <%= form.select :category_id, options_for_select(current_user.categories.map { |category| [category.name, category.id ] }), {prompt: "select category"}, presenter.field_options(:category_id, 'form-select') %>
       <%= presenter.error_container_for(:category_id) %>
     </div>
 
@@ -33,5 +33,3 @@
     <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
-
-<%= product.errors[:category_id].inspect %>

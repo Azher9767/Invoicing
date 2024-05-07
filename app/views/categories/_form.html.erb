@@ -4,7 +4,7 @@
     <div class="row mb-6">
       <%= presenter.label(:name, 'form-label') %>
       <div class="col-lg-8 fv-row">
-        <%= form.text_field :name, presenter.input_field_options(:name, 'form-control') %>
+        <%= form.text_field :name, presenter.field_options(:name, 'form-control') %>
         <%= presenter.error_container_for(:name) %>
       </div>
     </div>
@@ -12,7 +12,7 @@
     <div class="row mb-6">
       <%= presenter.label(:product_count, 'form-label') %>
       <div class="col-lg-8 fv-row">
-        <%= form.number_field :product_count, presenter.input_field_options(:product_count) %>
+        <%= form.number_field :product_count, presenter.field_options(:product_count) %>
         <%= presenter.error_container_for(:product_count) %>
       </div>
     </div>
