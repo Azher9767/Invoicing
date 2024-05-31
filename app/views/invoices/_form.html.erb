@@ -23,9 +23,9 @@
     </div>
 
     <div class="col-12">
-      <div data-controller="invoice">
+      <div data-controller="invoice" data-invoice-edit-value="<%= action_name == 'edit' %>">
         <%= presenter.label(:line_items, 'form-label') %>
-        <%= select_tag :product_id, grouped_options_for_select(categories),
+        <%= select_tag :product_id, grouped_options_for_select(categories(form.object)),
           presenter.field_options(:line_items, 'form-select',
           prompt: 'Select Line Item',
           multiple: true,
@@ -34,7 +34,7 @@
         <%= presenter.error_container_for(:line_items) %>
     
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <%= form.label :item_name, class: 'form-label' %>
           </div>  
 
@@ -49,6 +49,10 @@
           <div class="col-md-2">
             <%= form.label :unit, class: 'form-label' %>
           </div>
+
+          <div class="col-md-2">
+            <%= form.label :tax_and_discount, class: 'form-label' %>
+          </div>
         </div>
 
         <div id="line_item">
@@ -58,15 +62,14 @@
           <%= render partial: 'line_item_fields', locals: { line_item: line_item } %>
         <% end %>
         
-        <%= presenter.label(:tax_and_discount_polies, 'form-label') %>
-        <%= select_tag :tax_and_discount, grouped_options_for_select(td_options(current_user)),
-          presenter.field_options(:tax_and_discount_polies, 'form-select',
+        <%= form.label :tax_and_discount, class: 'pt-4'%>
+        <%= select_tag :tax_and_discount, grouped_options_for_select(td_options(current_user, form.object)),
+          class: 'form-select',
           prompt: 'Select Tax/Discount',
           multiple: true,
           data: {invoice_target: 'product'},
-          id: 'tax_and_discount') %>
-          <%= presenter.error_container_for(:tax_and_discount_polies) %>
-
+          id: 'tax_and_discount' %>
+      
         <div class="row">
           <div class="col-md-4">
             <%= form.label :name, class: 'form-label' %>

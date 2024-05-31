@@ -1,22 +1,143 @@
 RSpec.describe InvoiceAmountCalculator do
-  context "for line item" do
-    let(:line_items) { build_list(:line_item, 2) }
-    let(:expected_subtotal) { 200.0 }
+  subject(:handler) { described_class.new(line_items, invoice_tds) }
 
-    it "calculate subtotal for multiple line items" do
-      sub_total_amount = InvoiceAmountCalculator.new.calculate_sub_total(line_items, [])
-      expect(sub_total_amount[1]).to eq(expected_subtotal)
+  describe '#only_line_items?' do
+    context "only line items" do
+      let(:line_items) { build_list(:line_item, 2) }
+      let(:invoice_tds) { [] } 
+
+      specify do
+        expect(handler.only_line_items?).to be_truthy
+      end
+    end
+
+    context 'when invoice td is present' do
+      let(:line_items) { build_list(:line_item, 2) }
+      let(:invoice_tds) { [build(:tax_and_discount_poly, :tax)] }  
+
+      specify do
+        expect(handler.only_line_items?).to be_falsey
+      end
+    end
+
+    context 'when line items td is present' do
+      let(:line_items) do
+        [
+          build(:line_item, item_name: 'first', unit_rate: 100, quantity: 1,
+                tax_and_discount_polies_attributes: [{name: 'CGST 18.0 %', amount: 18.0, td_type: 'tax'}])
+        ]
+      end
+
+      let(:invoice_tds) { [] }  
+
+      specify do
+        expect(handler.only_line_items?).to be_falsey
+      end
+    end
+
+    context 'when line items td and invoice td is present' do
+      let(:line_items) do
+        [
+          build(:line_item, item_name: 'first', unit_rate: 100, quantity: 1,
+                tax_and_discount_polies_attributes: [{name: 'CGST 18.0 %', amount: 18.0, td_type: 'tax'}])
+        ]
+      end
+
+      let(:invoice_tds) { [build(:tax_and_discount_poly, :tax)] }  
+
+      specify do
+        expect(handler.only_line_items?).to be_falsey
+      end
     end
   end
 
-  context "for line item with tax and discount" do
-    let(:line_items) { build_list(:line_item, 2) }
-    let(:tax_and_discount_polies) { build_list(:tax_and_discount_poly, 1) }
-    let(:expected_subtotal) { 236.0 }
+  describe '#td_on_invoice_only?' do
+    context 'when td on invoice only is present' do
+      let(:line_items) { build_list(:line_item, 2) }
+      let(:invoice_tds) { [build(:tax_and_discount_poly, :tax)] }  
 
-    it "calculate total for multiple line items with tax and discount" do
-      total_amount = InvoiceAmountCalculator.new.calculate_sub_total(line_items, tax_and_discount_polies)
-      expect(total_amount[0]).to eq(expected_subtotal)
+      specify do
+        expect(handler.td_on_invoice_only?).to be_truthy
+      end
     end
-  end  
+
+    context 'when td on invoice is present and also line items td is present' do
+      let(:line_items) do
+        [
+          build(:line_item, item_name: 'first', unit_rate: 100, quantity: 1,
+                tax_and_discount_polies_attributes: [{name: 'CGST 18.0 %', amount: 18.0, td_type: 'tax'}])
+        ]
+      end
+      
+      let(:invoice_tds) { [build(:tax_and_discount_poly, :tax)] }  
+
+      specify do
+        expect(handler.td_on_invoice_only?).to be_falsey
+      end
+    end
+  end
+
+  describe '#td_in_line_items_only?' do
+    context 'when td in line items only' do
+      let(:line_items) do
+        [
+          build(:line_item, item_name: 'first', unit_rate: 100, quantity: 1,
+                tax_and_discount_polies_attributes: [{name: 'CGST 18.0 %', amount: 18.0, td_type: 'tax'}])
+        ]
+      end
+
+      let(:invoice_tds) { [] }
+
+      specify do
+        expect(handler.td_in_line_items_only?).to be_truthy
+      end
+    end
+
+    context 'when only td in line items but invoice td is also present' do
+      let(:line_items) do
+        [
+          build(:line_item, item_name: 'first', unit_rate: 100, quantity: 1,
+                tax_and_discount_polies_attributes: [{name: 'CGST 18.0 %', amount: 18.0, td_type: 'tax'}])
+        ]
+      end
+      
+      let(:invoice_tds) { [build(:tax_and_discount_poly, :tax)] }  
+
+      specify do
+        expect(handler.td_on_invoice_only?).to be_falsey
+      end
+    end
+  end
+
+  describe '#td_in_line_items_and_invoice?' do
+    context 'when both td in line items and td on invoice' do
+      let(:line_items) do
+        [
+          build(:line_item, item_name: 'first', unit_rate: 100, quantity: 1,
+                tax_and_discount_polies_attributes: [{name: 'CGST 18.0 %', amount: 18.0, td_type: 'tax'}])
+        ]
+      end
+      
+      let(:invoice_tds) { [build(:tax_and_discount_poly, :tax)] }  
+  
+      specify do
+        expect(handler.td_in_line_items_and_invoice?).to be_truthy
+      end
+    end
+
+    context 'when line items discount is present and invoice tax is present' do
+      let(:line_items) do
+        [
+          build(:line_item, item_name: 'second', unit_rate: 100, quantity: 1,
+                tax_and_discount_polies_attributes: [{name: 'Diwali Sale 10.0 %', amount: -10.0, td_type: 'discount'}])
+        ]
+      end
+      
+      let(:invoice_tds) { [build(:tax_and_discount_poly, :tax)] }  
+  
+      specify do
+        expect(handler.td_in_line_items_and_invoice?).to be_truthy
+      end
+    end
+  end
 end
