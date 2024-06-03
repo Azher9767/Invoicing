@@ -115,7 +115,7 @@ RSpec.describe Calculation::LineItemsWithTdAndItd do
       it_behaves_like 'total_and_subtotal'
     end
 
-    context 'when multiple line items discount and multiple invoice discount is present' do
+    context 'when multiple line items discount and multiple invoice discount is present' do   # conflict
       let(:line_items) do
         [
           build(:line_item, item_name: 'Python work', unit_rate: 100, quantity: 1,
@@ -137,7 +137,7 @@ RSpec.describe Calculation::LineItemsWithTdAndItd do
       it_behaves_like 'total_and_subtotal'
     end
 
-    context 'when line items discount and tax, and when invoice discount and tax is present' do
+    context 'when line items discount and tax, and when invoice discount and tax is present', focus: true do
       let(:line_items) do
         [
           build(:line_item, item_name: 'HTML work', unit_rate: 100, quantity: 1,
@@ -240,6 +240,52 @@ RSpec.describe Calculation::LineItemsWithTdAndItd do
       end
 
       let(:total_and_subtotal) { [215.0, 200.0, [0.0, 0.0]] }
+
+      it_behaves_like 'total_and_subtotal'
+    end
+
+    context 'when multiple line items and invoice tds is present' do
+      let(:line_items) do
+        [
+          build(:line_item, item_name: 'Java work', unit_rate: 100, quantity: 1,
+                            tax_and_discount_polies_attributes: [{ name: 'SGST', amount: 18.0, td_type: 'tax' }]),
+          build(:line_item, item_name: 'one', unit_rate: 100, quantity: 1),
+          build(:line_item, item_name: 'two', unit_rate: 100, quantity: 1),
+          build(:line_item, item_name: 'three', unit_rate: 100, quantity: 1)
+        ]
+      end
+
+      let(:invoice_tds) do
+        [
+          build(:tax_and_discount_poly, :discount, amount: -10),
+          build(:tax_and_discount_poly, :tax, amount: 10)
+        ]
+      end
+
+      let(:total_and_subtotal) { [403.20, 400.0, [0.0, 0.0]] }
+
+      it_behaves_like 'total_and_subtotal'
+    end
+
+    context 'when multiple line items tds and invoice tds present '  do
+      let(:line_items) do
+        [
+          build(:line_item, item_name: 'Java work', unit_rate: 100, quantity: 1,
+                            tax_and_discount_polies_attributes: [{ name: 'SGST', amount: 18.0, td_type: 'tax' }]),
+          build(:line_item, item_name: 'Java work', unit_rate: 100, quantity: 1,
+                            tax_and_discount_polies_attributes: [{ name: 'Diwali sale', amount: -10.0, td_type: 'discount' }]),
+          build(:line_item, item_name: 'one', unit_rate: 100, quantity: 1)
+        ]
+      end
+
+      let(:invoice_tds) do
+        [
+          build(:tax_and_discount_poly, :discount, amount: -10),
+          build(:tax_and_discount_poly, :tax, amount: 10)
+        ]
+      end
+
+      let(:total_and_subtotal) { [294.30, 290.0, [0.0, 0.0]] }
 
       it_behaves_like 'total_and_subtotal'
     end

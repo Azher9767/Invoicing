@@ -15,7 +15,7 @@ module Calculation
       @tax_amount = taxes.map { |itd| @total * itd.amount / 100 }.sum if taxes.present?
 
       @total += @tax_amount
-      [@total, line_items_total]
+      [@total, line_items_total, [@tax_amount, @discount_amount]]
     end
 
     private

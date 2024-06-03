@@ -12,15 +12,17 @@ module Invoices
       invoice = Invoice.new
       line_items = calculation_params[:lineItemsAttributes].map do |line_item|
         tax_and_discount_polies_attributes = TaxAndDiscount.where(id: line_item[:tdIds]).map do |td|
-          {td_type: td.td_type, amount:  td.amount, name:  td.name}
+          {td_type: td.td_type, amount: td.amount, name: td.name}
         end
+        
         if line_item[:quantity].present? && line_item[:unitRate].present?
           LineItem.new(
             quantity: line_item[:quantity].to_f,
             unit_rate: line_item[:unitRate].to_f,
             unit: line_item[:unit],
-            tax_and_discount_polies_attributes:
+            tax_and_discount_polies_attributes: tax_and_discount_polies_attributes
           )
+         
         end
       end
       invoice.line_items = line_items
@@ -35,7 +37,8 @@ module Invoices
 
       invoice.tax_and_discount_polies = tax_and_discount_polys
       
-      @total, @sub_total = InvoiceAmountCalculator.new(invoice.line_items, invoice.tax_and_discount_polys).call
+      @total, @sub_total, @tax_or_discount = InvoiceAmountCalculator.new(invoice.line_items, invoice.tax_and_discount_polies).call
+  
     end
 
     private

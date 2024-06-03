@@ -16,7 +16,7 @@ module Calculation
       [
         total.round(2),
         sub_total,
-        [0.0, 0.0]
+         [0.0, 0.0]
       ]
     end
 
@@ -40,6 +40,8 @@ module Calculation
     def total
       if line_items_have_own_tax? && !line_items_have_own_discount? && invoice_tds.none?(&:discount?)
         calculate_total_without_discounts
+      elsif line_items_have_own_tax? && !line_items_have_own_discount? && !invoice_tds.none?(&:discount?)
+        calculate_total_with_tds
       else
         calculate_total
       end
@@ -52,12 +54,48 @@ module Calculation
       total_amount + (total_amount * calculate_inv_tax_amount_to_add / 100) + li_total_tax
     end
 
-    def calculate_total
+    def calculate_total_with_tds
       total_excluding_tax = invoice_discount
-      total_excluding_tax += total_excluding_tax * calculate_li_tax_amount_to_add / 100
-      total_excluding_tax + (total_excluding_tax * calculate_inv_tax_amount_to_add / 100)
+      total_excluding_tax += taxed_line_items_with_invoice_discount * calculate_li_tax_amount_to_add / 100
+      total_excluding_tax + untaxed_line_items_with_invoice_discount * calculate_inv_tax_amount_to_add / 100
+    end
+    
+    def calculate_total
+   
+      total_excluding_tax = taxed_line_items_with_invoice_discount
+      total_excluding_tax += taxed_line_items_with_invoice_discount * calculate_li_tax_amount_to_add / 100
+      li_invoice_tax = ( (invoice_discount - taxed_line_items_with_invoice_discount) * calculate_inv_tax_amount_to_add / 100)
+      li_invoice_tax_total = li_invoice_tax + (invoice_discount - taxed_line_items_with_invoice_discount)
+      total_excluding_tax + li_invoice_tax_total
+     
+     
+        # total_excluding_tax = invoice_discount
+        # total_excluding_tax += total_excluding_tax * calculate_li_tax_amount_to_add / 100
+        # total_excluding_tax + (total_excluding_tax * calculate_inv_tax_amount_to_add / 100)
+      
     end
 
+    def taxed_line_items_with_invoice_discount
+      line_items.flat_map do |line_item|
+        line_item.tax_and_discount_polies.map do |li|
+          if li.tax?
+            line_item.total + invoice_tds.select(&:discount?).sum(&:amount)
+          end
+        end
+      end.compact.sum
+    end
+    
+    def untaxed_line_items_with_invoice_discount
+      li_total = 0
+      line_items.each do |line_item|
+        if !line_item.tax_and_discount_polies.present? || line_item.tax_and_discount_polies.any? { |li| li.discount? }
+          li_total += line_item.total + invoice_tds.select(&:discount?).sum(&:amount)
+        end
+      end
+    
+      li_total
+    end
+    
     def invoice_discount
       amount = sub_total
       invoice_tds.select(&:discount?).map do |discount|
