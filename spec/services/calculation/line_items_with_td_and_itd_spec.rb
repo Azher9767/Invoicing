@@ -137,7 +137,7 @@ RSpec.describe Calculation::LineItemsWithTdAndItd do
       it_behaves_like 'total_and_subtotal'
     end
 
-    context 'when line items discount and tax, and when invoice discount and tax is present', focus: true do
+    context 'when line items discount and tax, and when invoice discount and tax is present' do
       let(:line_items) do
         [
           build(:line_item, item_name: 'HTML work', unit_rate: 100, quantity: 1,

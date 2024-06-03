@@ -38,41 +38,32 @@ module Calculation
     end
 
     def total
-      if line_items_have_own_tax? && !line_items_have_own_discount? && invoice_tds.none?(&:discount?)
-        calculate_total_without_discounts
-      elsif line_items_have_own_tax? && !line_items_have_own_discount? && !invoice_tds.none?(&:discount?)
-        calculate_total_with_tds
-      else
+      # if line_items_have_own_tax? && !line_items_have_own_discount?
+      #   calculate_total_without_discounts
+      # elsif line_items_have_own_tax? && !line_items_have_own_discount? && invoice_tds.any?(&:discount?)
+      #   calculate_total_with_tds
+      # else
         calculate_total
-      end
+      # end
     end
 
     def calculate_total_without_discounts
-      li_total_tax = calculate_li_total
-      li_total_tax += li_total_tax * calculate_li_tax_amount_to_add / 100
+      li_total = calculate_li_total
+      li_total += li_total * calculate_li_tax_amount_to_add / 100
       total_amount = apply_invoice_tax_on_line_items
-      total_amount + (total_amount * calculate_inv_tax_amount_to_add / 100) + li_total_tax
+      total_amount + (total_amount * calculate_inv_tax_amount_to_add / 100) + li_total
     end
 
-    def calculate_total_with_tds
-      total_excluding_tax = invoice_discount
-      total_excluding_tax += taxed_line_items_with_invoice_discount * calculate_li_tax_amount_to_add / 100
-      total_excluding_tax + untaxed_line_items_with_invoice_discount * calculate_inv_tax_amount_to_add / 100
-    end
+    # def calculate_total_with_tds
+    #   total_excluding_tax = invoice_discount
+    #   total_excluding_tax += taxed_line_items_with_invoice_discount * calculate_li_tax_amount_to_add / 100
+    #   total_excluding_tax + untaxed_line_items_with_invoice_discount * calculate_inv_tax_amount_to_add / 100
+    # end
     
     def calculate_total
-   
-      total_excluding_tax = taxed_line_items_with_invoice_discount
-      total_excluding_tax += taxed_line_items_with_invoice_discount * calculate_li_tax_amount_to_add / 100
-      li_invoice_tax = ( (invoice_discount - taxed_line_items_with_invoice_discount) * calculate_inv_tax_amount_to_add / 100)
-      li_invoice_tax_total = li_invoice_tax + (invoice_discount - taxed_line_items_with_invoice_discount)
-      total_excluding_tax + li_invoice_tax_total
-     
-     
-        # total_excluding_tax = invoice_discount
-        # total_excluding_tax += total_excluding_tax * calculate_li_tax_amount_to_add / 100
-        # total_excluding_tax + (total_excluding_tax * calculate_inv_tax_amount_to_add / 100)
-      
+      total_excluding_tax = invoice_discount
+      total_excluding_tax += total_excluding_tax * calculate_li_tax_amount_to_add / 100
+      total_excluding_tax + (total_excluding_tax * calculate_inv_tax_amount_to_add / 100)
     end
 
     def taxed_line_items_with_invoice_discount
@@ -112,11 +103,11 @@ module Calculation
     end
 
     def calculate_li_total
-      li_tax = 0
+      li_total = 0
       line_items.filter_map do |li|
-        li_tax += li.total if li.tax_and_discount_polies.any?(&:tax?)
+        li_total += li.total if li.tax_and_discount_polies.any?(&:tax?)
       end.sum
-      li_tax
+      li_total
     end
 
     def calculate_inv_tax_amount_to_add
