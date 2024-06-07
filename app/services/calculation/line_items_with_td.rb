@@ -7,8 +7,9 @@ module Calculation
 
     def call
       [
-        total,
-        sub_total
+        total.round(2),
+        sub_total,
+        [0.0, 0.0]
       ]
     end
 

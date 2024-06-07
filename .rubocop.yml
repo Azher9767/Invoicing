@@ -179,6 +179,9 @@ Performance/StartWith:
 RSpec/StubbedMock:
   Enabled: false
 
+RSpec/MultipleExpectations:
+  Enabled: false
+
 InternalAffairs/ExampleDescription:
   Include:
     - 'spec/rubocop/cop/**/*.rb'
