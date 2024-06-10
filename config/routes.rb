@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   namespace :invoices do
     resources :line_items, only: [:create, :destroy]
     resources :tax_and_discount_polies, only: [:create, :destroy]
-    resources :calculator, only: [:create]
+    resource :calculations, only: [:create]
   end
 
   resources :invoices do

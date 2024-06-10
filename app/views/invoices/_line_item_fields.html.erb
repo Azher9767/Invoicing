@@ -6,7 +6,7 @@
     <div class="row" data-invoice-target="lineitem" id="<%= line_item.hash %>" data-params=<%= params %>>
   <% end %>
   
-    <div class="col-md-6">
+    <div class="col-md-4">
       <%= form.text_field :item_name, presenter.field_options(:item_name, 'form-control') %>
       <%= presenter.error_container_for(:item_name) %>
     </div>  
@@ -23,9 +23,23 @@
     <div class="col-md-2">
       <%= form.text_field :unit, class: "form-control" %>
     </div>
+    
+    <div class="col-md-2">
+      <%= form.fields_for :tax_and_discount_polies do |td_form| %>
+        <%= td_form.select :tax_and_discount_id, grouped_options_for_select(td_options(current_user, form.object),[], include_blank: false),
+        {prompt: 'Select Tax/Discount'}, {multiple: true} %>
+      <% end %>
 
+      <% if form.object.tax_and_discount_polies.empty? %>
+        <%= form.fields_for :tax_and_discount_polies, form.object.tax_and_discount_polies.build do |td_form| %>
+          <%= td_form.select :tax_and_discount_id, grouped_options_for_select(td_options(current_user, form.object),[], include_blank: false),
+          {prompt: 'Select Tax/Discount'}, {multiple: true} %>
+        <% end %>
+      <% end %>
+    </div>
     <%= form.hidden_field :product_id %>
     <%= form.hidden_field :id %>
+   
   </div>
 <% end %>
 

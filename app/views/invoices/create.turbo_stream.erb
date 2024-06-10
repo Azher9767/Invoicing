@@ -1,0 +1,4 @@
+<%=  @exception if @exception.present? %>
+<%= turbo_stream.replace 'new_invoice_form' do %>
+  <%= render "form", invoice: @invoice %>
+<% end %>

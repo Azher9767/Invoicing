@@ -19,11 +19,16 @@ class InvoicesController < ApplicationController
 
   # GET /invoices/1/edit
   def edit
+   @invoice.line_items.each do |line_item|
+    if line_item.tax_and_discount_polies.empty?
+      line_item.tax_and_discount_polies.build
+    end
+   end
   end
 
   # POST /invoices or /invoices.json
   def create
-    @invoice = Invoice.new(invoice_params)
+    @invoice = InvoiceObjectBuilder.new(invoice_params).call
     @invoice.user = current_user
     respond_to do |format|
       if @invoice.save
@@ -31,9 +36,14 @@ class InvoicesController < ApplicationController
         format.json { render :show, status: :created, location: @invoice }
       else
         set_category
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @invoice.errors, status: :unprocessable_entity }
+        format.turbo_stream
       end
+    end
+  rescue ActiveRecord::RecordInvalid => e
+      @exception = e.message
+
+    respond_to do |format|
+      format.turbo_stream
     end
   end
 
@@ -45,8 +55,7 @@ class InvoicesController < ApplicationController
         format.json { render :show, status: :ok, location: @invoice }
       else
         set_category
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @invoice.errors, status: :unprocessable_entity }
+        format.turbo_stream
       end
     end
   end
@@ -61,19 +70,34 @@ class InvoicesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_invoice
-      @invoice = Invoice.find(params[:id])
-    end
 
-    def set_category
-      @categories = Category.includes(:products).where(user_id: current_user.id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_invoice
+    @invoice = Invoice.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def invoice_params
-      params.require(:invoice).permit(:line_items_count, :name, :status, :note, :payment_date, :due_date,
-      line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id],
-      tax_and_discount_polies_attributes: [:id, :name, :td_type, :amount])
+  def set_category
+    @categories = Category.includes(:products).where(user_id: current_user.id)
+  end
+
+  # Only allow a list of trusted parameters through.
+  def invoice_params
+    params[:invoice][:line_items_attributes].each do |_key, value|
+      value[:tax_and_discount_polies_attributes] = value[:tax_and_discount_polies_attributes].each do |_k, v|
+        v[:tax_and_discount_id] = v[:tax_and_discount_id].reject!(&:empty?)
+      end
+    end if params[:invoice][:line_items_attributes].present?
+ 
+    params.require(:invoice).permit(
+      :name, :status, :note, :payment_date, :due_date, 
+      line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id, tax_and_discount_polies_attributes: [tax_and_discount_id: []]], 
+      tax_and_discount_polies_attributes: [:id, :name, :td_type, :amount, :tax_and_discount_id]
+      ).tap do |whitelisted_params|
+        whitelisted_params[:line_items_attributes]&.each do |_key, value|
+          if value[:id].present?
+            value[:tax_and_discount_polies_attributes]&.reject! { |_k, v| v[:id].to_s.empty? }
+          end
+        end
     end
+  end
 end
