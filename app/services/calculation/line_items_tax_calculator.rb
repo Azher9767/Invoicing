@@ -1,6 +1,5 @@
 module Calculation
   class LineItemsTaxCalculator
-
     def initialize(line_item, invoice_discounts)
       @line_item = line_item
       @invoice_discounts = invoice_discounts
@@ -44,7 +43,7 @@ module Calculation
     end
 
     def policies
-      @policies ||= line_item.tax_and_discount_polies
+      @policies ||= line_item.tax_and_discount_polies.reject(&:marked_for_destruction?)
     end
   end
 end

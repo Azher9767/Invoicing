@@ -32,7 +32,7 @@ module Calculation
 
     def apply_discounts(line_item)
       line_item.tax_and_discount_polies.reduce(line_item.total) do |amount, td|
-        if td.discount?
+        if td.discount? && !td.marked_for_destruction?
           amount += line_item.total * td.amount / 100
         end
         amount
@@ -41,7 +41,7 @@ module Calculation
 
     def apply_taxes(line_item, discounted_amount)
       line_item.tax_and_discount_polies.reduce(discounted_amount) do |amount, td|
-        if td.tax?
+        if td.tax? && !td.marked_for_destruction?
           amount += discounted_amount * td.amount / 100
         end
         amount

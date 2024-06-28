@@ -39,11 +39,11 @@ module Calculation
     end
 
     def discounts
-      itds.select { |itd| itd.discount? }
+      itds.select(&:discount?)
     end
 
     def taxes
-      itds.select { |itd| itd.tax? }
+      itds.select(&:tax?)
     end
   end
 end

@@ -6,7 +6,7 @@ class LineItem < ApplicationRecord
 
   has_many :tax_and_discount_polies, as: :tax_discountable
   has_many :tax_and_discounts, through: :tax_and_discount_polies, source: :tax_and_discount
-  accepts_nested_attributes_for :tax_and_discount_polies
+  accepts_nested_attributes_for :tax_and_discount_polies, allow_destroy: true
 
   def total
     quantity * unit_rate

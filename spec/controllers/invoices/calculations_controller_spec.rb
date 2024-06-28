@@ -475,4 +475,33 @@ RSpec.describe Invoices::CalculationsController do
       end
     end
   end
+
+  context 'total amount per line item' do # rubocop:disable RSpec/ContextWording
+    let(:line_item_attributes) do
+      {
+        'quantity' => '1',
+        'unitRate' => '100',
+        'unit' => 'hrs',
+        'objId' => '1',
+        'tdIds' => []
+      }
+    end
+
+    let(:tax_and_discount_poly_attributes) { [] }
+
+    let(:params) do
+      {
+        'calculation' => {
+          'lineItemsAttributes' => [line_item_attributes],
+          'taxAndDiscountPolyAttributes' => tax_and_discount_poly_attributes
+        }
+      }
+    end
+
+    it 'return total amount per line item and their tds' do
+      post :create, params: params, format: 'turbo_stream'
+      expect(assigns(:line_item_details)).to eq({ '1' => { tax_and_discount_polies_attributes: [], total: 100.0 } })
+      expect(assigns(:total)).to eq(100.0)
+    end
+  end
 end

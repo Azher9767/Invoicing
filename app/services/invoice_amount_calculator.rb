@@ -8,7 +8,7 @@ class InvoiceAmountCalculator
 
   def call # rubocop:disable Metrics/MethodLength
     if only_line_items?
-     [@line_items.sum(&:total), @line_items.sum(&:total)]
+      [@line_items.sum(&:total), @line_items.sum(&:total)]
     else
       if td_in_line_items_and_invoice?
         Calculation::LineItemsWithTdAndItd.new(@line_items, @itds).call
