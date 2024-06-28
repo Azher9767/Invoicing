@@ -33,8 +33,12 @@ module Calculation
 
     def apply_polies(amount, policies)
       policies.reduce(amount) do |current_amount, td|
-        current_amount += current_amount * td.amount / 100.0
-        current_amount
+        if td.discount? && !td.marked_for_destruction?
+          current_amount += current_amount * td.amount / 100.0
+          current_amount
+        else
+          amount
+        end
       end
     end
 
@@ -47,7 +51,7 @@ module Calculation
     def invoice_discount(total_amount)
       disc_amount = 0.0
       amount = total_amount
-      
+
       invoice_tds.select(&:discount?).each do |td|
         disc_amount += (td.amount / 100) * amount
         amount = amount + disc_amount

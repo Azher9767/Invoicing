@@ -8,4 +8,8 @@ class TaxAndDiscount < ApplicationRecord
   has_many :line_items, through: :tax_and_discount_polies, source: :tax_discountable, source_type: 'LineItem'
 
   include TaxAndDiscountQueries
+
+  def attributes_for_polies
+    attributes.except('id', 'description', 'created_at', 'updated_at', 'user_id')
+  end
 end

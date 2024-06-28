@@ -1,0 +1,8 @@
+<% if errors.any? %>
+  <div class="alert alert-danger">
+    <h2><%= pluralize(errors.count, "error") %> something is missing:</h2>
+      <% errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+  </div>
+<% end %>
