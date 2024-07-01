@@ -9,7 +9,7 @@ module Calculation
       [
         total.round(2),
         sub_total,
-        [0.0, 0.0]
+        [taxable_amount, discountable_amount]
       ]
     end
 
@@ -45,6 +45,22 @@ module Calculation
           amount += discounted_amount * td.amount / 100
         end
         amount
+      end
+    end
+
+    def taxable_amount
+      @taxable_amount ||= line_items.sum do |li|
+        li.tax_and_discount_polies.select { |td| td.tax? && !td.marked_for_destruction? }.sum do |td|
+          apply_discounts(li) * td.amount / 100
+        end
+      end
+    end
+
+    def discountable_amount
+      @discountable_amount ||= line_items.sum do |li|
+        li.tax_and_discount_polies.select { |td| td.discount? && !td.marked_for_destruction? }.sum do |td|
+          li.total * td.amount / 100
+        end
       end
     end
   end
