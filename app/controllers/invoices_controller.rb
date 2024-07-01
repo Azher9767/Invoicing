@@ -9,8 +9,7 @@ class InvoicesController < ApplicationController
   end
 
   # GET /invoices/1 or /invoices/1.json
-  def show
-  end
+  def show; end
 
   # GET /invoices/new
   def new
@@ -18,13 +17,7 @@ class InvoicesController < ApplicationController
   end
 
   # GET /invoices/1/edit
-  def edit
-  #   @invoice.line_items.each do |line_item|
-  #   if line_item.tax_and_discount_polies.empty?
-  #     line_item.tax_and_discount_polies.build
-  #   end
-  #  end
-  end
+  def edit; end
 
   # POST /invoices or /invoices.json
   def create
@@ -82,23 +75,6 @@ class InvoicesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def invoice_params
-    # params[:invoice][:line_items_attributes].each do |_key, value|
-    #   value[:tax_and_discount_polies_attributes] = value[:tax_and_discount_polies_attributes].each do |_k, v|
-    #     v[:tax_and_discount_id] = v[:tax_and_discount_id].reject!(&:empty?)
-    #   end
-    # end if params[:invoice][:line_items_attributes].present?
- 
-    # params.require(:invoice).permit(
-    #   :name, :status, :note, :payment_date, :due_date,
-    #   line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id, tax_and_discount_polies_attributes: [:_destroy, :id, tax_and_discount_id: []]], 
-    #   tax_and_discount_polies_attributes: [:id, :name, :td_type, :amount, :tax_and_discount_id]
-    #   ).tap do |whitelisted_params|
-    #     whitelisted_params[:line_items_attributes]&.each do |_key, value|
-    #       if value[:id].present?
-    #         value[:tax_and_discount_polies_attributes]&.reject! { |_k, v| v[:id].to_s.empty? }
-    #       end
-    #     end
-    # end
     params.require(:invoice).permit(
       :id, :name, :status, :payment_date, :due_date, :note,
       line_items_attributes: [:id, :item_name, :unit_rate, :quantity, :unit, :product_id, tax_and_discount_ids: []],

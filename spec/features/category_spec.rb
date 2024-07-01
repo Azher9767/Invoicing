@@ -3,11 +3,11 @@ RSpec.describe 'Category' do
     visit root_path
     user = create(:user)
     signin(user.email, 'azher@123')
-    expect(page.has_content?('Signed in successfully.')).to be(true) # rubocop:disable RSpec/ExpectInHook
-    expect(page.has_content?('Welcome To Home')).to be(true) # rubocop:disable RSpec/ExpectInHook
   end
 
   it 'create a new category' do
+    expect(page.has_content?('Signed in successfully.')).to be(true)
+    expect(page.has_content?('Welcome To Home')).to be(true)
     visit new_category_path
     within('form[action="/categories"]') do
       fill_in 'category_name', with: 'Electronic'

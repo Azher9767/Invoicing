@@ -1,5 +1,5 @@
-import { Controller, ElementObserver } from "@hotwired/stimulus"
-import { get, post, destroy, put } from "@rails/request.js"
+import { Controller } from "@hotwired/stimulus"
+import { post, destroy } from "@rails/request.js"
 import TomSelect from 'tom-select'
 export default class extends Controller {
   static targets = ["lineitem", "taxAndDiscountPoly", "product"];
@@ -112,7 +112,6 @@ export default class extends Controller {
       if (lineItemRegex.test(rowId)) {
         // rowId follows the line_item_<id> format
         const lineItemId = rowId.split('_')[2];
-        // invoice_line_items_attributes_-917897757923998642_tax_and_discount_ids
         rowHtmlId = `#invoice_line_items_attributes_${lineItemId}_tax_and_discount_ids`;
       } else if (hashRegex.test(rowId)) {
         // rowId is a numerical hash (including negative numbers)
@@ -135,33 +134,15 @@ export default class extends Controller {
         },
 
         item:function(data, escape){
-          //  corrected later
-          // let polyArray = JSON.parse(data.polyId);
-          // let polyId = polyArray[0].p_id;
-
-          // let isTrue = data.polyId.includes('true');
           return '<div>' + escape(data.text) + '</div>';
         }
       }
     });
   }
 
-  handleTaxAndDiscountOnLineItem(event) {
-    // this.removeLineItemTdsFromDb(event)
+  handleTaxAndDiscountOnLineItem() {
     this.taxAndDiscountOfLineItems();
   }
-
-  removeLineItemTdsFromDb(event) {
-    let polyId = event[1].dataset.polyId
-
-    console.log(polyId)
-    let htmlTdIds = `invoice_line_items_attributes_${polyId}_tax_and_discount_polies_attributes_0__destroy`
-    let el = document.getElementById(htmlTdIds)
-    console.log(el)
-    // let lineItemTdsId = event[0]
-    // this.extractLineItemAttributes(lineItemTdsId)
-  }
-
 
   taxAndDiscountOfLineItems(){
     const taxAndDiscountPolyAttributes = this.taxAndDiscountPolyTargets.map((taxAndDiscountPoly) => ({
@@ -176,7 +157,7 @@ export default class extends Controller {
     });
   }
 
-  handleLineItemChange(event) {
+  handleLineItemChange() {
     const taxAndDiscountPolyAttributes = this.taxAndDiscountPolyTargets.map((taxAndDiscountPoly) => ({
       name: taxAndDiscountPoly.children[0].children[0].value,
       amount: taxAndDiscountPoly.children[1].children[0].value,
@@ -194,7 +175,6 @@ export default class extends Controller {
       let tdIds = []
       let selectedTds = []
       let htmlElement = lineitem.children[4].children[1]?.children[0]?.children
-      console.log(lineitem.children[4].children[1])
       if (htmlElement) {
         selectedTds = Array.from(htmlElement).slice(0, -1)
         tdIds = selectedTds.map(element => element.dataset.value)

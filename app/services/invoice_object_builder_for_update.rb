@@ -28,8 +28,8 @@ class InvoiceObjectBuilderForUpdate
     @invoice ||= Invoice.find(@invoice_id)
   end
 
+  # Handles attribute level changes or new line items
   def handle_line_items
-    # Handles attribute level changes or new line items
     line_items_params.each do |param_id, param|
       db_li = invoice_line_items.find { |line_item| (line_item.id == param_id.to_i) }
       if db_li.present?
@@ -40,7 +40,7 @@ class InvoiceObjectBuilderForUpdate
     end
   end
 
-  # handles for deleted line items
+  # Handles for deleted line items
   def li_mark_for_destruction
     (invoice_line_items.ids - line_items_params.keys.map(&:to_i)).compact.each do |tbd| # compact is used to avoid nil after the comparision
       li = invoice_line_items.find { |l| tbd == l.id }

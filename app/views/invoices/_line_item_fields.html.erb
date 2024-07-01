@@ -25,9 +25,6 @@
     </div>
     
     <div class="col-md-2">
-      <%#= form.select :tax_and_discount_ids, grouped_options_for_select(td_options(current_user, form.object),[], include_blank: false),
-        {prompt: 'Select Tax/Discount'}, {multiple: true} %>
-
       <%= form.select :tax_and_discount_ids, grouped_options_for_select(td_options(current_user, form.object)),
         { prompt: 'Select Item', include_hidden: false },
         multiple: true,
