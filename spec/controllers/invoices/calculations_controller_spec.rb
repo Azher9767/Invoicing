@@ -94,7 +94,7 @@ RSpec.describe Invoices::CalculationsController do
         create_request
         expect(assigns(:total)).to eq(115.0)
         expect(assigns(:sub_total)).to eq(100.0)
-        expect(assigns(:tax_or_discount)).to eq([0.0, 0.0])
+        expect(assigns(:tax_or_discount)).to eq([15.0, 0.0])
       end
     end
 
@@ -131,7 +131,7 @@ RSpec.describe Invoices::CalculationsController do
         post :create, params: params, format: 'turbo_stream'
         expect(assigns(:total)).to eq(85.0)
         expect(assigns(:sub_total)).to eq(85.0)
-        expect(assigns(:tax_or_discount)).to eq([0.0, 0.0])
+        expect(assigns(:tax_or_discount)).to eq([0.0, -15.0])
       end
     end
 
@@ -168,7 +168,7 @@ RSpec.describe Invoices::CalculationsController do
         post :create, params: params, format: 'turbo_stream'
         expect(assigns(:total)).to eq(104.5)
         expect(assigns(:sub_total)).to eq(95.0)
-        expect(assigns(:tax_or_discount)).to eq([0.0, 0.0])
+        expect(assigns(:tax_or_discount)).to eq([9.5, -5.0])
       end
     end
   end
@@ -342,7 +342,7 @@ RSpec.describe Invoices::CalculationsController do
 
         expect(assigns(:total)).to eq(330.0)
         expect(assigns(:sub_total)).to eq(300.0)
-        expect(assigns(:tax_or_discount)).to eq([0.0, 0.0])
+        expect(assigns(:tax_or_discount)).to eq([15.0, 0.0])
       end
     end
 
@@ -407,7 +407,7 @@ RSpec.describe Invoices::CalculationsController do
 
         expect(assigns(:total)).to eq(238.55)
         expect(assigns(:sub_total)).to eq(285.0)
-        expect(assigns(:tax_or_discount)).to eq([0.0, 0.0])
+        expect(assigns(:tax_or_discount)).to eq([0.0, -46.46])
       end
     end
 
@@ -471,8 +471,37 @@ RSpec.describe Invoices::CalculationsController do
         post :create, params: params, format: 'turbo_stream'
         expect(assigns(:total)).to eq(301.44)
         expect(assigns(:sub_total)).to eq(293.0)
-        expect(assigns(:tax_or_discount)).to eq([0.0, 0.0])
+        expect(assigns(:tax_or_discount)).to eq([18.34, -14.65])
       end
+    end
+  end
+
+  context 'total amount per line item' do # rubocop:disable RSpec/ContextWording
+    let(:line_item_attributes) do
+      {
+        'quantity' => '1',
+        'unitRate' => '100',
+        'unit' => 'hrs',
+        'objId' => '1',
+        'tdIds' => []
+      }
+    end
+
+    let(:tax_and_discount_poly_attributes) { [] }
+
+    let(:params) do
+      {
+        'calculation' => {
+          'lineItemsAttributes' => [line_item_attributes],
+          'taxAndDiscountPolyAttributes' => tax_and_discount_poly_attributes
+        }
+      }
+    end
+
+    it 'return total amount per line item and their tds' do
+      post :create, params: params, format: 'turbo_stream'
+      expect(assigns(:line_item_details)).to eq({ '1' => { tax_and_discount_polies_attributes: [], total: 100.0 } })
+      expect(assigns(:total)).to eq(100.0)
     end
   end
 end

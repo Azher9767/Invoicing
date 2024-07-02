@@ -10,10 +10,10 @@ class Invoice < ApplicationRecord
   validates :status, presence: true, inclusion: { in: statuses.keys }
   validates :name, presence: true
   validates :line_items, presence: true
-  
+
   has_many :line_items, dependent: :destroy
   accepts_nested_attributes_for :line_items
-  
+
   has_many :tax_and_discounts
   accepts_nested_attributes_for :tax_and_discount_polies
 

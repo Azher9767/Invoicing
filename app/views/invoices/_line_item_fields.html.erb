@@ -1,17 +1,17 @@
 <%= fields_for "invoice[line_items_attributes][#{line_item.persisted? ? line_item.id : line_item.hash}]", line_item do |form|%>
   <% presenter = FormPresenter.new(line_item, self, 'form-control') %>
   <% if line_item.persisted? %>
-    <div class="row" data-invoice-target="lineitem" id="<%= dom_id(line_item) %>" data-params=<%= params %>>
+    <div class="row" data-invoice-target="lineitem" id="<%= dom_id(line_item) %>">
   <% else %>
-    <div class="row" data-invoice-target="lineitem" id="<%= line_item.hash %>" data-params=<%= params %>>
+    <div class="row" data-invoice-target="lineitem" id="<%= line_item.hash %>">
   <% end %>
   
-    <div class="col-md-4">
+    <div class="col-md-3">
       <%= form.text_field :item_name, presenter.field_options(:item_name, 'form-control') %>
       <%= presenter.error_container_for(:item_name) %>
     </div>  
 
-    <div class="col-md-2">
+    <div class="col-md-1">
       <%= form.number_field :quantity, presenter.field_options(:quantity, "form-control", data: {action: "change->invoice#handleInputChange" }) %>
       <%= presenter.error_container_for(:quantity) %>
     </div>  
@@ -20,26 +20,26 @@
       <%= form.number_field :unit_rate, class: "form-control", data: {action: "change->invoice#handleInputChange" } %>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-1">
       <%= form.text_field :unit, class: "form-control" %>
     </div>
     
     <div class="col-md-2">
-      <%= form.fields_for :tax_and_discount_polies do |td_form| %>
-        <%= td_form.select :tax_and_discount_id, grouped_options_for_select(td_options(current_user, form.object),[], include_blank: false),
-        {prompt: 'Select Tax/Discount'}, {multiple: true} %>
-      <% end %>
-
-      <% if form.object.tax_and_discount_polies.empty? %>
-        <%= form.fields_for :tax_and_discount_polies, form.object.tax_and_discount_polies.build do |td_form| %>
-          <%= td_form.select :tax_and_discount_id, grouped_options_for_select(td_options(current_user, form.object),[], include_blank: false),
-          {prompt: 'Select Tax/Discount'}, {multiple: true} %>
-        <% end %>
-      <% end %>
+      <%= form.select :tax_and_discount_ids, grouped_options_for_select(td_options(current_user, form.object)),
+        { prompt: 'Select Item', include_hidden: false },
+        multiple: true,
+        autocomplete: 'off'
+      %>
     </div>
+
+    <div class="col-md-3 d-flex justify-content-center">
+      <span id= <%= "line_item_total_#{line_item.persisted? ? line_item.id : line_item.hash}"%>>
+      </span>
+    </div>
+
     <%= form.hidden_field :product_id %>
     <%= form.hidden_field :id %>
-   
+    <%= hidden_field_tag :obj_id, line_item.persisted? ? line_item.id : line_item.hash %>
   </div>
 <% end %>
 

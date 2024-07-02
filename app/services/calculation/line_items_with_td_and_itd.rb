@@ -17,7 +17,7 @@ module Calculation
       [
         total.round(2),
         sub_total,
-        [0.0, 0.0]
+        [taxable_amount, discountable_amount]
       ]
     end
 
@@ -33,27 +33,41 @@ module Calculation
 
     def apply_polies(amount, policies)
       policies.reduce(amount) do |current_amount, td|
-        current_amount += current_amount * td.amount / 100.0
-        current_amount
+        if td.discount? && !td.marked_for_destruction?
+          current_amount += current_amount * td.amount / 100.0
+          current_amount
+        else
+          amount
+        end
       end
     end
 
     def total
       new_subtotal = sub_total + invoice_discount(sub_total)
-      new_subtotal = new_subtotal + line_items_tax
+      new_subtotal += line_items_tax
       new_subtotal + invoice_tax(new_subtotal)
     end
 
     def invoice_discount(total_amount)
       disc_amount = 0.0
       amount = total_amount
-      
+
       invoice_tds.select(&:discount?).each do |td|
         disc_amount += (td.amount / 100) * amount
-        amount = amount + disc_amount
+        amount += disc_amount
       end
 
       disc_amount
+    end
+
+    def taxable_amount
+      new_subtotal = sub_total + invoice_discount(sub_total)
+      new_subtotal += line_items_tax
+      invoice_tax(new_subtotal).round(2)
+    end
+
+    def discountable_amount
+      invoice_discount(sub_total).round(2)
     end
 
     def line_items_tax
