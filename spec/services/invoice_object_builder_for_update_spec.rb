@@ -153,4 +153,62 @@ RSpec.describe InvoiceObjectBuilderForUpdate do
       expect(invoice_object.line_items.first.tax_and_discount_polies.last.marked_for_destruction?).to be_falsey
     end
   end
+
+  context 'removing the tax from line item when invoice tax is present' do # rubocop:disable RSpec/ContextWording
+    let(:invoice_params) do
+      HashWithIndifferentAccess.new({
+                                      'id' => invoice.id,
+                                      'name' => 'invoice new',
+                                      'due_date' => invoice.due_date,
+                                      'payment_date' => invoice.payment_date,
+                                      'line_items_attributes' => {
+                                        consultation.id.to_s => {
+                                          'item_name' => consultation.item_name,
+                                          'quantity' => consultation.quantity,
+                                          'unit_rate' => consultation.unit_rate,
+                                          'unit' => consultation.unit,
+                                          'tax_and_discount_ids' => [],
+                                          'product_id' => consultation.product.id,
+                                          'id' => consultation.id.to_s
+                                        },
+                                        development.id.to_s => {
+                                          'item_name' => development.item_name,
+                                          'quantity' => development.quantity,
+                                          'unit_rate' => development.unit_rate,
+                                          'unit' => development.unit,
+                                          'tax_and_discount_ids' => [tax.id],
+                                          'product_id' => development.product.id,
+                                          'id' => development.id.to_s
+                                        }
+                                      },
+                                      'tax_and_discount_polies_attributes' => {
+                                        tax_policy.id => {
+                                          'name' => 'New Tax',
+                                          'amount' => tax.amount,
+                                          'td_type' => tax.td_type,
+                                          'tax_and_discount_id' => tax.id,
+                                          'id' => tax_policy.id
+                                        },
+                                        discount_policy.id => {
+                                          'name' => discount.name,
+                                          'amount' => discount.amount,
+                                          'td_type' => discount.td_type,
+                                          'tax_and_discount_id' => discount.id,
+                                          'id' => discount_policy.id
+                                        }
+                                      },
+                                      'note' => ''
+                                    })
+    end
+
+    it 'updates the attributes' do
+      invoice_object = described_class.new(invoice.id, invoice_params).call
+      expect(invoice_object.line_items.first.tax_and_discount_polies.size).to eq(1)
+      expect(invoice_object.line_items.first.tax_and_discount_polies.first.marked_for_destruction?).to be_truthy
+      #expect(InvoiceAmountCalculator.new(invoice_object.line_items, invoice_object.tax_and_discount_polies).call).to eq([106.2, 100])
+      invoice_object.save
+      expect(invoice_object.total).to eq(102.6)
+      expect(invoice_object.sub_total).to eq(100)
+    end
+  end
 end
