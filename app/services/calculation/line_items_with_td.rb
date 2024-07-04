@@ -1,6 +1,8 @@
 module Calculation
   # This class calculates invoice's total and sub total when it has line items with taxes or discounts or both and no invoice taxes or discounts
   class LineItemsWithTd
+    include LineItemsQueries
+
     def initialize(line_items)
       @line_items = line_items
     end
@@ -18,13 +20,13 @@ module Calculation
     attr_reader :line_items
 
     def sub_total
-      @sub_total ||= line_items.sum do |li|
+      @sub_total ||= line_items_polies.sum do |li|
         apply_discounts(li)
       end
     end
 
     def total
-      @total ||= line_items.sum do |li|
+      @total ||= line_items_polies.sum do |li|
         discounted_amount = apply_discounts(li)
         apply_taxes(li, discounted_amount)
       end
@@ -49,16 +51,16 @@ module Calculation
     end
 
     def taxable_amount
-      @taxable_amount ||= line_items.sum do |li|
-        li.tax_and_discount_polies.select { |td| td.tax? && !td.marked_for_destruction? }.sum do |td|
+      @taxable_amount ||= line_items_polies.sum do |li|
+        li.tax_and_discount_polies.select(&:tax?).sum do |td|
           apply_discounts(li) * td.amount / 100
         end
       end
     end
 
     def discountable_amount
-      @discountable_amount ||= line_items.sum do |li|
-        li.tax_and_discount_polies.select { |td| td.discount? && !td.marked_for_destruction? }.sum do |td|
+      @discountable_amount ||= line_items_polies.sum do |li|
+        li.tax_and_discount_polies.select(&:discount?).sum do |td|
           li.total * td.amount / 100
         end
       end

@@ -8,6 +8,8 @@ module Calculation
   # 5. apply line items tax after invoice tds
   LineItemsWithTdAndItd = Struct.new :invoice
   class LineItemsWithTdAndItd
+    include LineItemsQueries
+
     def initialize(line_items, invoice_tds)
       @line_items = line_items
       @invoice_tds = invoice_tds
@@ -26,7 +28,7 @@ module Calculation
     attr_reader :line_items, :invoice_tds
 
     def sub_total
-      @sub_total ||= line_items.sum do |li|
+      @sub_total ||= line_items_polies.sum do |li|
         apply_polies(li.total, li.discounts)
       end
     end
