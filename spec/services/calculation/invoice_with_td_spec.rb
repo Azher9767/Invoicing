@@ -18,9 +18,9 @@ RSpec.describe Calculation::InvoiceWithTd do
           build(:tax_and_discount_poly, :discount, amount: -10)
         ]
       end
-  
-      let(:total_and_subtotal) { [198.0, sub_total] }
-  
+
+      let(:total_and_subtotal) { [198.0, sub_total, [18.0, -20.0]] }
+
       it_behaves_like 'total_and_subtotal'
     end
 
@@ -31,7 +31,7 @@ RSpec.describe Calculation::InvoiceWithTd do
         ]
       end
 
-      let(:total_and_subtotal) { [180.0, sub_total] }
+      let(:total_and_subtotal) { [180.0, sub_total, [0.0, -20.0]] }
   
       it_behaves_like 'total_and_subtotal'
     end
@@ -43,7 +43,7 @@ RSpec.describe Calculation::InvoiceWithTd do
         ]
       end
 
-      let(:total_and_subtotal) { [220.0, sub_total] }
+      let(:total_and_subtotal) { [220.0, sub_total, [20.0, 0.0]] }
   
       it_behaves_like 'total_and_subtotal'
     end

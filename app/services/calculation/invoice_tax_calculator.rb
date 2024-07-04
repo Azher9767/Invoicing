@@ -1,6 +1,6 @@
 module Calculation
   class InvoiceTaxCalculator
-    def initialize(tax, line_items,  sub_total, invoice_discounts)
+    def initialize(tax, line_items, sub_total, invoice_discounts)
       @tax = tax
       @line_items = line_items
       @sub_total = sub_total
@@ -28,15 +28,16 @@ module Calculation
 
     def discounted_line_items
       @discounted_line_items ||= line_items.select do |li|
-        next if li.tax_and_discount_polies.any?(&:tax?)
+        valid_polies = li.tax_and_discount_polies.reject(&:marked_for_destruction?)
+        next if valid_polies.any?(&:tax?)
 
-        li.tax_and_discount_polies.blank? || li.tax_and_discount_polies.any?(&:discount?)
+        valid_polies.blank? || valid_polies.any?(&:discount?)
       end
     end
 
     def handle_discounted_line_items
       discounted_line_items.inject(0.0) do |acc, li|
-        total_discount_percentage = li.tax_and_discount_polies.select { |td| td.discount? }.sum(&:amount)
+        total_discount_percentage = li.tax_and_discount_polies.select { |td| td.discount? && !td.marked_for_destruction? }.sum(&:amount)
         discounted_basic_rate = (li.total * 0.01 * total_discount_percentage) + li.total
         discounted = invoice_discounts.inject(0.0) do |sum, disc|
           discounted_basic_rate.round(2) + (discounted_basic_rate * 0.01 * disc.amount).round(2) + sum

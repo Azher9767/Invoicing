@@ -22,7 +22,7 @@ module Invoices
 
     def destroy
       @line_item = LineItem.find_by(id: params[:id])
-      @line_item.destroy if @line_item.present? && @line_item.persisted? 
+      @line_item.destroy if @line_item.present? && @line_item.persisted?
     end
   end
 end

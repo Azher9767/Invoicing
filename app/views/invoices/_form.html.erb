@@ -34,11 +34,11 @@
         <%= presenter.error_container_for(:line_items) %>
     
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <%= form.label :item_name, class: 'form-label' %>
           </div>  
 
-          <div class="col-md-2">
+          <div class="col-md-1">
             <%= form.label :quantity, class: 'form-label' %>
           </div>  
 
@@ -46,12 +46,16 @@
             <%= form.label :unit_rate, class: 'form-label' %>
           </div>
 
-          <div class="col-md-2">
+          <div class="col-md-1 d-flex justify-content-center">
             <%= form.label :unit, class: 'form-label' %>
           </div>
 
           <div class="col-md-2">
             <%= form.label :tax_and_discount, class: 'form-label' %>
+          </div>
+
+            <div class="col-md-3 d-flex justify-content-center">
+            <%= form.label :total_amount, class: 'form-label' %>
           </div>
         </div>
 
@@ -82,7 +86,6 @@
           <div class="col-md-4">
             <%= form.label :td_type, class: 'form-label' %>
           </div>
-
         </div>
 
         <div id="tax_and_discount_poly">
