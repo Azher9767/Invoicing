@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :product do
-    name {'Mobile'}
+    name { 'Mobile' }
   end
 end

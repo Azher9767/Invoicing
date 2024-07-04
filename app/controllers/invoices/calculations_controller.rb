@@ -10,21 +10,25 @@ module Invoices
   class CalculationsController < ApplicationController # rubocop:disable Style/Documentation
     def create # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       invoice = Invoice.new
+      @line_item_details = {}
       line_items = calculation_params[:lineItemsAttributes].map do |line_item|
         tax_and_discount_polies_attributes = TaxAndDiscount.where(id: line_item[:tdIds]).map do |td|
           { td_type: td.td_type, amount: td.amount, name: td.name }
         end
         next unless line_item[:quantity].present? && line_item[:unitRate].present?
 
-        LineItem.new(
+        li = LineItem.new(
           quantity: line_item[:quantity].to_f,
           unit_rate: line_item[:unitRate].to_f,
           unit: line_item[:unit],
           tax_and_discount_polies_attributes: tax_and_discount_polies_attributes
         )
-      end
-      invoice.line_items = line_items
+        @line_item_details[line_item[:objId]] = { total: li.total, tax_and_discount_polies_attributes: tax_and_discount_polies_attributes }
 
+        li
+      end
+
+      invoice.line_items = line_items
       if calculation_params[:taxAndDiscountPolyAttributes].present?
         tax_and_discount_polys = calculation_params[:taxAndDiscountPolyAttributes].map do |td_poly|
           TaxAndDiscountPoly.new(amount: td_poly[:amount].to_f, td_type: td_poly[:td_type], name: td_poly[:name] )
@@ -40,7 +44,7 @@ module Invoices
     def calculation_params
       params.require(:calculation).permit(
         :taxAndDiscountPolyAttributes,
-        lineItemsAttributes: [:quantity, :unitRate, :unit, { tdIds: [] }],
+        lineItemsAttributes: [:quantity, :unitRate, :unit, :objId, { tdIds: [] }],
         taxAndDiscountPolyAttributes: %i[amount td_type name]
       )
     end

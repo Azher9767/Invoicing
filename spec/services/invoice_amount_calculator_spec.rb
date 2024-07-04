@@ -139,5 +139,27 @@ RSpec.describe InvoiceAmountCalculator do
         expect(handler.td_in_line_items_and_invoice?).to be_truthy
       end
     end
+
+    context 'when multiple line items' do
+      let(:line_items) do
+        [
+          build(:line_item, item_name: 'first', unit_rate: 50, quantity: 1, tax_and_discount_polies_attributes: []),
+          build(:line_item, item_name: 'first', unit_rate: 50, quantity: 1,
+                            tax_and_discount_polies_attributes: [{ name: 'CGST 18.0 %', amount: 18.0, td_type: 'tax' }])
+        ]
+      end
+
+      let(:invoice_tds) do 
+        [
+          build(:tax_and_discount_poly, :tax, amount: 18.0),
+          build(:tax_and_discount_poly, :discount, amount: -10.0)
+        ]
+      end
+
+      specify do
+        expect(handler.td_in_line_items_and_invoice?).to be_truthy
+        expect(handler.call).to eq([106.2, 100, [8.1, -10]])
+      end
+    end
   end
 end
