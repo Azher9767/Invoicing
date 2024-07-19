@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { get, post, destroy, put } from "@rails/request.js"
+import { post, destroy } from "@rails/request.js"
 import TomSelect from 'tom-select'
 export default class extends Controller {
   static targets = ["lineitem", "taxAndDiscountPoly", "product"];
@@ -78,7 +78,7 @@ export default class extends Controller {
   // a Text(Work)
   // a Text(Work;10;10)
   removeLineItem(id) {
-    let lineItem = this.lineitemTargets.find((lineitem) => lineitem.dataset.params == id);
+    let lineItem = this.lineitemTargets.find((lineitem) => lineitem.children[6].value == id);
     const lineItemId = lineItem.id
     destroy(`/invoices/line_items/${lineItemId}`, { 
       responseKind: "turbo-stream"
@@ -96,14 +96,14 @@ export default class extends Controller {
   }
 
   lineitemTargetDisconnected(event) {
-    this.handleLineItemChange()   
+    this.handleLineItemChange();
   }
 
   //when the url is edit then rowId will be "line_item_198"
   //when url is new then rowId will be something alpha numeric
   addTaxDiscountDropdown(rowId) {
     let addEventHandlerTd = () => (...args) => this.handleTaxAndDiscountOnLineItem(...args);
-  
+    let removeEventHandlerTd = () => (...args) => this.handleTaxAndDiscountOnLineItem(args);
     let rowHtmlId;
     if (this.editValue) {
       const lineItemRegex = /^line_item_\d+$/;
@@ -112,14 +112,14 @@ export default class extends Controller {
       if (lineItemRegex.test(rowId)) {
         // rowId follows the line_item_<id> format
         const lineItemId = rowId.split('_')[2];
-        rowHtmlId = `#invoice_line_items_attributes_${lineItemId}_tax_and_discount_polies_attributes_0_tax_and_discount_id`;
+        rowHtmlId = `#invoice_line_items_attributes_${lineItemId}_tax_and_discount_ids`;
       } else if (hashRegex.test(rowId)) {
         // rowId is a numerical hash (including negative numbers)
-        rowHtmlId = `#invoice_line_items_attributes_${rowId}_tax_and_discount_polies_attributes_0_tax_and_discount_id`;
+        rowHtmlId = `#invoice_line_items_attributes_${rowId}_tax_and_discount_ids`;
       }
     } else {
       const rowIdOther = rowId
-      rowHtmlId = `#invoice_line_items_attributes_${rowIdOther}_tax_and_discount_polies_attributes_0_tax_and_discount_id`;
+      rowHtmlId = `#invoice_line_items_attributes_${rowIdOther}_tax_and_discount_ids`;
     }
   
     new TomSelect(rowHtmlId, { 
@@ -127,75 +127,65 @@ export default class extends Controller {
       create: false,
       hidePlaceholder: true,
       onItemAdd: addEventHandlerTd(),
+      onItemRemove: removeEventHandlerTd(),
       render:{
         option:function(data,escape){
           return '<div class="d-flex"><span>' + escape(data.text) + '</span></div>';
         },
-        item:function(data,escape){
+
+        item:function(data, escape){
           return '<div>' + escape(data.text) + '</div>';
         }
       }
     });
   }
 
-  handleTaxAndDiscountOnLineItem(event) {
+  handleTaxAndDiscountOnLineItem() {
     this.taxAndDiscountOfLineItems();
   }
 
   taxAndDiscountOfLineItems(){
-    let lineItemsAttributes = [];
-    this.lineitemTargets.forEach((lineitem) => {
-      const selectedTds = Array.from(lineitem.children[4].children[2].children[0].children).slice(0, -1)
-      const tdIds = []
-
-      selectedTds.forEach(element => {
-        tdIds.push(element.dataset.value);
-      });
-
-      lineItemsAttributes.push({
-        quantity: lineitem.children[1].children[0].value,
-        unitRate: lineitem.children[2].children[0].value,
-        tdIds: tdIds
-      });
-    });
-
-    let taxAndDiscountPolyAttributes = [];
-    this.taxAndDiscountPolyTargets.forEach((taxAndDiscountPoly) => {
-      taxAndDiscountPolyAttributes.push({
-        name: taxAndDiscountPoly.children[0].children[0].value,
-        amount: taxAndDiscountPoly.children[1].children[0].value,
-        td_type: taxAndDiscountPoly.children[2].children[0].value
-      });
-    });
+    const taxAndDiscountPolyAttributes = this.taxAndDiscountPolyTargets.map((taxAndDiscountPoly) => ({
+      name: taxAndDiscountPoly.children[0].children[0].value,
+      amount: taxAndDiscountPoly.children[1].children[0].value,
+      td_type: taxAndDiscountPoly.children[2].children[0].value
+    }));
 
     post(`/invoices/calculations`, {
-      body: JSON.stringify({ calculation: { lineItemsAttributes, taxAndDiscountPolyAttributes } }),
+      body: JSON.stringify({ calculation: { lineItemsAttributes: this.extractLineItemAttributes(), taxAndDiscountPolyAttributes: taxAndDiscountPolyAttributes } }),
       responseKind: "turbo-stream"
     });
   }
 
-  handleLineItemChange(event) {
-    let taxAndDiscountPolyAttributes = [];
-    this.taxAndDiscountPolyTargets.forEach((taxAndDiscountPoly) => {
-      taxAndDiscountPolyAttributes.push({
-        name: taxAndDiscountPoly.children[0].children[0].value,
-        amount: taxAndDiscountPoly.children[1].children[0].value,
-        td_type: taxAndDiscountPoly.children[2].children[0].value
-      });
-    });
-
-    let lineItemsAttributes = [];
-    this.lineitemTargets.forEach((lineitem) => {
-      lineItemsAttributes.push({
-        quantity: lineitem.children[1].children[0].value,
-        unitRate: lineitem.children[2].children[0].value,
-        tdIds: []
-      });
-    });
+  handleLineItemChange() {
+    const taxAndDiscountPolyAttributes = this.taxAndDiscountPolyTargets.map((taxAndDiscountPoly) => ({
+      name: taxAndDiscountPoly.children[0].children[0].value,
+      amount: taxAndDiscountPoly.children[1].children[0].value,
+      td_type: taxAndDiscountPoly.children[2].children[0].value
+    }));
 
     post(`/invoices/calculations`, {
-      body: JSON.stringify({ calculation: { lineItemsAttributes, taxAndDiscountPolyAttributes } }),
+      body: JSON.stringify({ calculation: { lineItemsAttributes: this.extractLineItemAttributes(), taxAndDiscountPolyAttributes: taxAndDiscountPolyAttributes } }),
       responseKind: "turbo-stream"
+    });
+  }
+
+  extractLineItemAttributes(){
+    return this.lineitemTargets.map((lineitem) => {
+      let tdIds = []
+      let selectedTds = []
+      let htmlElement = lineitem.children[4].children[1]?.children[0]?.children
+      if (htmlElement) {
+        selectedTds = Array.from(htmlElement).slice(0, -1)
+        tdIds = selectedTds.map(element => element.dataset.value)
+      }
+     
+      return {
+        quantity: lineitem.children[1].children[0].value,
+        unitRate: lineitem.children[2].children[0].value,
+        objId: lineitem.children[8].value,
+        tdIds: tdIds
+      };
     });
   }
 

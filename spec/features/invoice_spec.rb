@@ -8,39 +8,39 @@ RSpec.describe 'Invoice', :js do
     category = create(:category, user:)
     create(:product, category:, unit_rate: 1)
   end
-  
-  it "creates a new invoice" do
+
+  it 'creates a new invoice' do # rubocop:disable RSpec/ExampleLength
     visit new_invoice_path
-    within("#new_invoice_form") do
+    within('#new_invoice_form') do
       fill_in 'Name', with: 'Jl construction'
       select 'Pending', from: 'invoice_status'
       fill_in 'Due date', with: '2024-04-16'
       fill_in 'Payment date', with: '2024-04-16'
 
-      container = find(:label, text: 'Line Items').ancestor(".invoice-line-items")
+      container = find(:xpath, "//label[text()='Line items']/following-sibling::div[contains(@class, 'ts-wrapper')][1]")
 
       within(container) do
-        find('.ts-control input').send_keys("Mobile")
+        find('.ts-control input').send_keys('Mobile')
       end
-    
-      all('.ts-dropdown .ts-dropdown-content .option', text: /#{Regexp.quote("Mobile")}/i)[0].click
+
+      all('.ts-dropdown .ts-dropdown-content .option', text: /#{Regexp.quote('Mobile')}/i)[0].click
 
       fill_in 'Note', with: 'due date'
-      click_button 'Create Invoice'
+      click_button 'Create Invoice' # rubocop:disable Capybara/ClickLinkOrButtonStyle
     end
-    
-    expect(page).to have_content('Invoice was successfully created.')
+
+    expect(page.has_content?('Invoice was successfully created.')).to be_truthy
     invoice = Invoice.last
-    expect(page).to have_content("User: #{invoice.user_id}")
-    expect(page).to have_content("Sub total: #{invoice.sub_total}")
-    expect(page).to have_content("Name: #{invoice.name}")
-    expect(page).to have_content("Status: #{invoice.status}")
-    expect(page).to have_content("#{invoice.line_items_count}")
-    expect(page).to have_content("Note: #{invoice.note}")
-    expect(page).to have_content("Payment date: #{invoice.payment_date}")
-    expect(page).to have_content("Due date: #{invoice.due_date}")
+    expect(page.has_content?("User: #{invoice.user_id}")).to be_truthy
+    expect(page.has_content?("Sub total: #{invoice.sub_total}")).to be_truthy
+    expect(page.has_content?("Name: #{invoice.name}")).to be_truthy
+    expect(page.has_content?("Status: #{invoice.status}")).to be_truthy
+    expect(page.has_content?(invoice.line_items_count.to_s)).to be_truthy
+    expect(page.has_content?("Note: #{invoice.note}")).to be_truthy
+    expect(page.has_content?("Payment date: #{invoice.payment_date}")).to be_truthy
+    expect(page.has_content?("Due date: #{invoice.due_date}")).to be_truthy
     invoice.line_items.each do |line_item|
-      expect(page).to have_content("#{line_item.item_name} | #{line_item.quantity} | #{line_item.unit_rate}")
+      expect(page.has_content?("#{line_item.item_name} | #{line_item.quantity} | #{line_item.unit_rate}")).to be_truthy
     end
   end
 end

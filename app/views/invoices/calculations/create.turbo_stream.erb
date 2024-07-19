@@ -16,3 +16,15 @@
     <p>Discount: <%= number_to_currency(discount_total) %></p>
   <% end %>
 <% end %>
+
+<% @line_item_details.each do |id, details| %>
+  <%= turbo_stream.update "line_item_total_#{id}" do %>
+    <% details[:tax_and_discount_polies_attributes].each do |td| %>
+      <span class="badge bg-secondary">
+        <%= td[:amount].abs %>% 
+        <%= td[:td_type] == 'discount' ? 'off' : td[:td_type] %>
+      </span>
+    <% end %>
+    <span><%= details[:total] %></span>
+  <% end %>
+<% end %>

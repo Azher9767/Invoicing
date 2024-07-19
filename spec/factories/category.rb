@@ -1,5 +1,9 @@
 FactoryBot.define do
   factory :category do
-    name { "Electronic" }
+    name { 'Electronic' }
+
+    trait :user do
+      user
+    end
   end
 end

@@ -7,21 +7,21 @@ RSpec.describe Calculation::LineItemsWithTd do
     end
   end
 
-  context "#call" do
+  describe '#call' do
     let(:line_items_total) { 200.0 }
-    
+
     context 'when both tax and discount are present' do
       let(:line_items) do
         [
           build(:line_item, item_name: 'first', unit_rate: 100, quantity: 1),
           build(:line_item, item_name: 'second', unit_rate: 100, quantity: 1,
-                tax_and_discount_polies_attributes: [{name: 'CGST', amount: 10.0, td_type: 'tax'}]),
+                            tax_and_discount_polies_attributes: [{ name: 'CGST', amount: 10.0, td_type: 'tax' }]),
           build(:line_item, item_name: 'third', unit_rate: 100, quantity: 1,
-                tax_and_discount_polies_attributes: [{name: 'Diwali Sale', amount: -10.0, td_type: 'discount'}])
+                            tax_and_discount_polies_attributes: [{ name: 'Diwali Sale', amount: -10.0, td_type: 'discount' }])
         ]
       end
 
-      let(:total_and_subtotal) { [300.0, 290.0] }
+      let(:total_and_subtotal) { [300.0, 290.0, [10.0, -10.0]] }
 
       it_behaves_like 'total_and_subtotal'
     end
@@ -30,13 +30,13 @@ RSpec.describe Calculation::LineItemsWithTd do
       let(:line_items) do
         [
           build(:line_item, item_name: 'first', unit_rate: 100, quantity: 1,
-                tax_and_discount_polies_attributes: [{name: '10 %', amount: 10.0, td_type: 'tax'}]),
-  
+                            tax_and_discount_polies_attributes: [{name: '10 %', amount: 10.0, td_type: 'tax'}]),
+
           build(:line_item, item_name: 'second', unit_rate: 100, quantity: 1,
-                tax_and_discount_polies_attributes: [{name: '10 %', amount: 10.0, td_type: 'tax'}])
+                            tax_and_discount_polies_attributes: [{name: '10 %', amount: 10.0, td_type: 'tax'}])
         ]
       end
-      let(:total_and_subtotal) { [220.0, 200.0] }
+      let(:total_and_subtotal) { [220.0, 200.0, [20.0, 0.0]] }
 
       it_behaves_like 'total_and_subtotal'
     end
@@ -45,13 +45,13 @@ RSpec.describe Calculation::LineItemsWithTd do
       let(:line_items) do
         [
           build(:line_item, item_name: 'first', unit_rate: 100, quantity: 1,
-                tax_and_discount_polies_attributes: [{name: '10 %', amount: -10.0, td_type: 'discount'}]),
-  
+                            tax_and_discount_polies_attributes: [{ name: '10 %', amount: -10.0, td_type: 'discount' }]),
+
           build(:line_item, item_name: 'second', unit_rate: 100, quantity: 1,
-                tax_and_discount_polies_attributes: [{name: '10 %', amount: -10.0, td_type: 'discount'}])
+                            tax_and_discount_polies_attributes: [{ name: '10 %', amount: -10.0, td_type: 'discount' }])
         ]
       end
-      let(:total_and_subtotal) { [180, 180] }
+      let(:total_and_subtotal) { [180, 180, [0.0, -20.0]] }
 
       it_behaves_like 'total_and_subtotal'
     end
@@ -61,15 +61,15 @@ RSpec.describe Calculation::LineItemsWithTd do
         [
           build(:line_item, item_name: 'first', unit_rate: 100, quantity: 1),
           build(:line_item, item_name: 'second', unit_rate: 100, quantity: 1,
-                tax_and_discount_polies_attributes: [{name: 'CGST', amount: 10.0, td_type: 'tax'},
-                                                    {name: 'Diwali Sale', amount: -10.0, td_type: 'discount'}]),
-  
+                            tax_and_discount_polies_attributes: [{ name: 'CGST', amount: 10.0, td_type: 'tax' },
+                                                                 { name: 'Diwali Sale', amount: -10.0, td_type: 'discount' }]),
+
           build(:line_item, item_name: 'third', unit_rate: 100, quantity: 1,
-                tax_and_discount_polies_attributes: [{name: 'CGST', amount: 10.0, td_type: 'tax'},
-                                                    {name: 'Diwali Sale', amount: -10.0, td_type: 'discount'}])
+                            tax_and_discount_polies_attributes: [{ name: 'CGST', amount: 10.0, td_type: 'tax' },
+                                                                 { name: 'Diwali Sale', amount: -10.0, td_type: 'discount' }])
         ]
       end
-      let(:total_and_subtotal) { [298, 280.0] }
+      let(:total_and_subtotal) { [298, 280.0, [18.0, -20.0]] }
 
       it_behaves_like 'total_and_subtotal'
     end
