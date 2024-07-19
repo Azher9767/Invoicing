@@ -127,7 +127,7 @@ export default class extends Controller {
       create: false,
       hidePlaceholder: true,
       onItemAdd: addEventHandlerTd(),
-      onItemRemove:removeEventHandlerTd(),
+      onItemRemove: removeEventHandlerTd(),
       render:{
         option:function(data,escape){
           return '<div class="d-flex"><span>' + escape(data.text) + '</span></div>';

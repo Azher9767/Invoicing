@@ -30,7 +30,7 @@ RSpec.describe InvoiceObjectBuilderForUpdate do
   let(:tax_policy) { invoice.tax_and_discount_polies.find_by(td_type: 'tax') }
   let(:discount_policy) { invoice.tax_and_discount_polies.find_by(td_type: 'discount') }
 
-  context 'for line item only' do # rubocop:disable RSpec/ContextWording
+  context 'when updating line items and policies' do
     let(:invoice_params) do
       HashWithIndifferentAccess.new({
                                       'id' => invoice.id,

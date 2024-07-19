@@ -5,7 +5,6 @@
 # 4. when user updates the amount of tax and discount
 # 5. when user updates the tax type of tax and discount
 # 6. when user updates the td type of tax and discount
-
 module Invoices
   class CalculationsController < ApplicationController # rubocop:disable Style/Documentation
     def create # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
@@ -23,6 +22,7 @@ module Invoices
           unit: line_item[:unit],
           tax_and_discount_polies_attributes: tax_and_discount_polies_attributes
         )
+        # The objId attribute is used to uniquely identify each line item in the calculation_params.
         @line_item_details[line_item[:objId]] = { total: li.total, tax_and_discount_polies_attributes: tax_and_discount_polies_attributes }
 
         li

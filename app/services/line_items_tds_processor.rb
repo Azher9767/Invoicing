@@ -55,7 +55,7 @@ class LineItemsTdsProcessor
     end
   end
 
-  def handle_changes(line_item, existing, new_changes)
+  def handle_changes(line_item, existing, new_changes) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
     if existing.keys.size > new_changes.size # deletion happened
       # find the polies to destroy
       td_ids = existing.keys - new_changes
@@ -77,17 +77,20 @@ class LineItemsTdsProcessor
   end
 
   def build_polies(line_item, td_ids)
-    TaxAndDiscount.where(id: td_ids).each do |td|
+    fetch_tax_and_discounts(td_ids).each do |td|
       line_item.tax_and_discount_polies.build(name: td.name, td_type: td.td_type, amount: td.amount, tax_and_discount_id: td.id,
                                               tax_discountable: line_item)
     end
   end
 
   def populate_polies(line_item, td_ids)
-    tds = TaxAndDiscount.where(id: td_ids)
-    tds.each do |td|
+    fetch_tax_and_discounts(td_ids).each do |td|
       obj = line_item.tax_and_discount_polies.find { |poly| poly.tax_and_discount_id == td.id }
       line_item.tax_and_discount_polies.build(name: td.name, td_type: td.td_type, amount: td.amount, tax_and_discount_id: td.id) if obj.blank?
     end
+  end
+
+  def fetch_tax_and_discounts(td_ids)
+    TaxAndDiscount.where(id: td_ids)
   end
 end

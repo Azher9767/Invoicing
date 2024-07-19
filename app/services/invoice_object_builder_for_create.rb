@@ -1,6 +1,8 @@
-# This class is responsible for building the invoice object
-# It will take the invoice params and return the invoice object
-# It will also handle the validation of the invoice params
+# frozen_string_literal: true
+
+# This class is responsible for building the invoice object along with its associated line items and tax/discount polies.
+# It takes the invoice parameters, builds the invoice object.
+# Manually populates tax and discount polies based on the selected tax/discount ids in the line items.
 
 class InvoiceObjectBuilderForCreate
   def initialize(params)
